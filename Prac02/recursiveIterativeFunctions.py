@@ -5,12 +5,13 @@
 
 # Wrapper
 def factRecursive(n):
-    if not isinstance(n, int):
-        raise Exception("Input must be an integer")
-    elif n < 0:
-        raise Exception("Number must be positive!")
-    else:
-        return _factRecursive(n)
+    try:
+        if n < 0:
+            print("Number must be positive!")
+        else:
+            return _factRecursive(n)
+    except TypeError:
+        print("input must be a number")
 
 
 # Method
@@ -24,12 +25,13 @@ def _factRecursive(n):
 
 # Wrapper
 def fibRecursive(n):
-    if not isinstance(n, int):
-        raise Exception("Input must be an integer")
-    elif n < 0:
-        raise Exception("Number must be positive!")
-    else:
-        return _fibRecursive(n)
+    try:
+        if n < 0:
+            print("Number must be positive!")
+        else:
+            return _fibRecursive(n)
+    except TypeError:
+        print("input must be a number")
 
 
 # Method
@@ -46,36 +48,38 @@ def _fibRecursive(n):
 
 # Wrapper
 def gcdRecursive(n, m):
-    if not (isinstance(n, int) or isinstance(m, int)):
-        raise Exception("Inputs must be an integer")
-    elif (n < 0) or (m < 0):
-        raise Exception("Numbers must be positive!")
-    else:
-        return _gcdRecursive(n)
-
+    try:
+        if (n < 0) or (m < 0):
+            print("Numbers must be positive!")
+        else:
+            return _gcdRecursive(n, m)
+    except TypeError:
+        print("inputs must be a number")
 
 # greatest common denominator function
 # taken from https://www.geeksforgeeks.org/gcd-in-python/
+
 
 # Method
 def _gcdRecursive(n, m):
     if m == 0:
         gcd = n
     else:
-        gcd = gcdRecursive(m, n % m)
+        gcd = _gcdRecursive(m, n % m)
     return gcd
 
 
 # Wrapper
 def base10ToAny(decimalNum, base):
-    if not (isinstance(decimalNum, int) or isinstance(base, int)):
-        raise Exception("Inputs must be an integer")
-    elif (decimalNum < 0):
-        raise Exception("Number must be positive!")
-    elif (base < 2) or (base > 16):
-        raise Exception("Base must be between 2 and 16!")
-    else:
-        return _base10ToAny(decimalNum)
+    try:
+        if (decimalNum < 0):
+            print("Number must be positive!")
+        elif (base < 2) or (base > 16):
+            print("Base must be between 2 and 16!")
+        else:
+            return _base10ToAny(decimalNum, base)
+    except TypeError:
+        print("inputs must be a number")
 
 
 # Method
@@ -89,12 +93,13 @@ def _base10ToAny(decimalNum, base):
 
 # Wrapper
 def moveDisk(n, src, dest, recLevel=1):
-    if not (isinstance(n, int) or isinstance(src, int) or isinstance(dest, int) or isinstance(recLevel, int)):
-        raise Exception("Inputs must be an integer")
-    elif (n < 1) or (src < 1) or (dest < 1) or (recLevel < 1):
-        raise Exception("Numbers must be greater than 0!")
-    else:
-        return _moveDisk(n, src, dest, recLevel)
+    try:
+        if (n < 1) or (src < 1) or (dest < 1) or (recLevel < 1):
+            print("Numbers must be greater than 0!")
+        else:
+            return _moveDisk(n, src, dest, recLevel)
+    except TypeError:
+        print("inputs must be a number")
 
 
 # Method
@@ -107,12 +112,13 @@ def _moveDisk(n, src, dest, recLevel):
 
 # Wrapper
 def towersOfHanoi(n, src, dest, recLevel=1):
-    if not (isinstance(n, int) or isinstance(src, int) or isinstance(dest, int) or isinstance(recLevel, int)):
-        raise Exception("Inputs must be an integer")
-    elif (n < 1) or (src < 1) or (dest < 1) or (recLevel < 1):
-        raise Exception("Numbers must be greater than 0!")
-    else:
-        return _towersOfHanoi(n, src, dest, recLevel)
+    try:
+        if (n < 1) or (src < 1) or (dest < 1) or (recLevel < 1):
+            print("Numbers must be greater than 0!")
+        else:
+            return _towersOfHanoi(n, src, dest, recLevel)
+    except TypeError:
+        print("inputs must be a number")
 
 
 # Method
@@ -133,12 +139,13 @@ def _towersOfHanoi(n, src, dest, recLevel):
 
 # Wrapper
 def factIterative(n):
-    if not isinstance(n, int):
-        raise Exception("Input must be an integer")
-    elif n < 0:
-        raise Exception("Number must be positive!")
-    else:
-        return _factIterative(n)
+    try:
+        if n < 0:
+            print("Number must be positive!")
+        else:
+            return _factIterative(n)
+    except TypeError:
+        print("input must be a number")
 
 
 # Method
@@ -151,12 +158,13 @@ def _factIterative(n):
 
 # Wrapper
 def fibIterative(n):
-    if not isinstance(n, int):
-        raise Exception("Input must be an integer")
-    elif n < 0:
-        raise Exception("Number must be positive!")
-    else:
-        return _fibIterative(n)
+    try:
+        if n < 0:
+            print("Number must be positive!")
+        else:
+            return _fibIterative(n)
+    except TypeError:
+        print("input must be a number")
 
 
 # Method
