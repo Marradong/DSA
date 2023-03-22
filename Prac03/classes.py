@@ -3,17 +3,17 @@ import numpy as np
 class DSAStack():
 
     def __init__(self, capacity=100):
-        self.capacity = capacity
-        self.stack = np.zeros(capacity, dtype=object)
-        self.count = 0
+        self._capacity = capacity
+        self._stack = np.zeros(capacity, dtype=object)
+        self._count = 0
     
 
     def getCount(self):
-        return self.count
+        return self._count
     
 
     def isEmpty(self):
-        if self.count == 0:
+        if self._count == 0:
             empty = True
         else:
             empty = False
@@ -21,7 +21,7 @@ class DSAStack():
 
 
     def isFull(self):
-        if self.count == self.capacity:
+        if self._count == self._capacity:
             full = True
         else:
             full = False
@@ -30,37 +30,41 @@ class DSAStack():
 
     def push(self, value):
         if not self.isFull():
-            self.stack[self.count] = value
-            self.count = self.count + 1
+            self._stack[self._count] = value
+            self._count = self._count + 1
     
 
     def top(self):
         if not self.isEmpty():
-            topVal = self.stack[self.count - 1]
+            topVal = self._stack[self._count - 1]
             return topVal
         
 
     def pop(self):
         topVal = self.top()
-        self.stack[self.count - 1] = 0
-        self.count = self.count - 1
+        self._stack[self._count - 1] = 0
+        self._count = self._count - 1
         return topVal
+    
+
+    def printStack(self):
+        print("Current Stack: ", self._stack)
 
 
 class DSAQueue():
 
     def __init__(self, capacity=100):
-        self.capacity = capacity
-        self.queue = np.zeros(self.capacity, dtype=object)
-        self.count = 0
+        self._capacity = capacity
+        self._queue = np.zeros(self._capacity, dtype=object)
+        self._count = 0
 
 
     def getCount(self):
-        return self.count
+        return self._count
     
 
     def isEmpty(self):
-        if self.count == 0:
+        if self._count == 0:
             empty = True
         else:
             empty = False
@@ -68,7 +72,7 @@ class DSAQueue():
 
 
     def isFull(self):
-        if self.count == self.capacity:
+        if self._count == self._capacity:
             full = True
         else:
             full = False
@@ -76,49 +80,59 @@ class DSAQueue():
 
     def enqueue(self, value):
         if not self.isFull():
-            self.queue[self.count] = value
-            self.count = self.count + 1
+            self._queue[self._count] = value
+            self._count = self._count + 1
 
     
     def dequeue(self):
         if not self.isEmpty():
-            frontVal = self.queue[0]
-            for i in range(self.count - 1):
-                self.queue[i] = self.queue[i+1]
-                self.queue[i+1] = 0
-            if (self.count - 1) == 0:
-                self.queue[0] = self.queue[1]
-            self.count = self.count - 1
+            frontVal = self._queue[0]
+            for i in range(self._count - 1):
+                self._queue[i] = self._queue[i+1]
+                self._queue[i+1] = 0
+            if (self._count - 1) == 0:
+                self._queue[0] = self._queue[1]
+            self._count = self._count - 1
             return frontVal
     
 
     def peek(self):
-            return self.queue[0]
+            return self._queue[0]
     
+
+    def printQueue(self):
+        print("Current Queue: ", self._queue)
+
+
+class DSAShufflingQueue(DSAQueue):
+    def __init__(self, capacity=100):
+        super().__init__(capacity)
+
+
 class DSACircularQueue(DSAQueue):
 
     def __init__(self, capacity=100):
         super().__init__(capacity)
-        self.frontIdx = 0
+        self._frontIdx = 0
 
     def dequeue(self):
         if not self.isEmpty():
-            frontVal = self.queue[self.frontIdx]
-            self.queue[self.frontIdx] = 0
-            if (self.frontIdx + 1) > self.capacity:
-                self.frontIdx = 0
+            frontVal = self._queue[self._frontIdx]
+            self._queue[self._frontIdx] = 0
+            if (self._frontIdx + 1) > (self._capacity - 1):
+                self._frontIdx = 0
             else:
-                self.frontIdx = self.frontIdx + 1
-            self.count = self.count - 1
+                self._frontIdx = self._frontIdx + 1
+            self._count = self._count - 1
             
             return frontVal
         
     
     def enqueue(self, value):
-        if (self.frontIdx + self.count) > self.capacity:
-            if not self.isFull():
-                #TODO
-                self.queue[self.count] = value
-                self.count = self.count + 1
-        else:
-            return super().enqueue(value)
+        if not self.isFull():
+            if (self._frontIdx + self._count) >= (self._capacity - 1):
+                    self._queue[self._count + self._frontIdx - self._capacity] = value
+                    self._count = self._count + 1
+            else:
+                self._queue[self._count] = value
+                self._count = self._count + 1
