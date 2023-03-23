@@ -22,6 +22,7 @@ def usage():
     print("           s - stack")
     print("           q - queue")
     print("           c - circular queue")
+    print("           f - shuffling queue")
     print("        y is one of")
     print("           a - 1..n ascending")
     print("           d - 1..n descending")
@@ -115,6 +116,26 @@ def doTest(capacity, classType, arrayType):
             DSACircularQueue.printQueue()   
             print("Is Queue empty: ", DSACircularQueue.isEmpty())
             print("Is Queue full: ", DSACircularQueue.isFull())
+        
+        elif classType == "f":
+            print("Initialising Shuffling Queue")
+            DSAShufflingQueue = classes.DSAShufflingQueue(capacity)
+            DSAShufflingQueue.printQueue()
+            print("Is Shuffling Queue empty: ", DSAShufflingQueue.isEmpty())
+            print("Is Shuffling Queue full: ", DSAShufflingQueue.isFull())
+            print("Adding items to Queue")
+            for item in A:
+                DSAShufflingQueue.enqueue(item)
+            DSAShufflingQueue.printQueue()   
+            print("Is Shuffling Queue empty: ", DSAShufflingQueue.isEmpty())
+            print("Is Shuffling Queue full: ", DSAShufflingQueue.isFull())
+            print("removing items from Queue")
+            for i in range(DSAShufflingQueue.getCount()):
+                print("removing item: ", DSAShufflingQueue.dequeue())
+            DSAShufflingQueue.printQueue()   
+            print("Is Shuffling Queue empty: ", DSAShufflingQueue.isEmpty())
+            print("Is Shuffling Queue full: ", DSAShufflingQueue.isFull())
+
         else:
             print("Unsupported sort algorithm")
             usage()
