@@ -13,6 +13,7 @@ def callStack(stack: cl.DSAStack, function, args):
         stack.push(str(function)+"("+str(args)+")")
     else: 
         stack.pop()
+    return stack
 
 
 ###################################
@@ -29,7 +30,7 @@ def fibRecursive(n, stack: cl.DSAStack):
             stack = callStack(stack, "fibRecursive", n)
             display(stack)
 
-            fibVal = _fibRecursive(n)
+            fibVal = _fibRecursive(n, stack)
 
             stack = callStack(stack, "", n)
             display(stack)
@@ -75,7 +76,7 @@ def _factRecursive(n, stack: cl.DSAStack):
     if (n == 0):
         return 1
     else:
-        return n * factRecursive(n-1, stack)
+        return n * factRecursive((n-1), stack)
     
 
 # Wrapper
@@ -141,3 +142,20 @@ def _fibIterative(n):
             currVal = fibVal
 
     return fibVal
+
+def __main__():
+    try:
+        stack = cl.DSAStack()
+        stack.printStack()
+        nUser = int(input("\nEnter a numer for the fibonacci functions: "))
+        print("The recursive fibonacci function gives a value of: ",fibRecursive(nUser, stack))
+        print("The iterative fibonacci function gives a value of: ",fibIterative(nUser, stack))
+        nUser = int(input("\nEnter a numer for the factorial functions: "))
+        print("The recursive factorial function gives a value of: ",factRecursive(nUser, stack))
+        print("The iterative factorial function gives a value of: ",factIterative(nUser, stack))
+    except Exception as e:
+        print(e)
+
+if __name__ == "__main__":
+    __main__()
+

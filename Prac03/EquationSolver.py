@@ -1,12 +1,11 @@
 import classes as cl
 
-
 def solve(equation):
     postfixQueue = _parseInfixToPostfix(equation)
     print("Postfix:")
     postfixQueue.printQueue()
-    print("Result:")
-    print(_evaluatePostfix(postfixQueue))
+    print("Operations:")
+    print("Result: ", _evaluatePostfix(postfixQueue))
 
 
 def _parseInfixToPostfix(equation):
@@ -43,7 +42,6 @@ def _evaluatePostfix(postfixQueue):
         item = postfixQueue.dequeue()
         if item not in operators:
             operands.push(item)
-            #print(item)
         else:
             op2 = operands.pop()
             op1 = operands.pop()

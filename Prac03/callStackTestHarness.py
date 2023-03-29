@@ -17,18 +17,19 @@ def usage():
 
 def doCallStack(n, functionType, callType):
     callstk = cl.DSAStack(1000)
-    if functionType == "b":
-        if callType == "r":
-            callStack.fibRecursive(n, callstk)
-        elif callType == "i":
-            callStack.fibIterative(n, callstk)
-    elif functionType == "c":
-        if callType == "r":
-            callStack.factRecursive(n, callstk)
-        elif callType == "i":
-            callStack.factIterative(n, callstk)
-    else:
-        print("Unsupported function")
+    if callStack != None:
+        if functionType == "b":
+            if callType == "r":
+                callStack.fibRecursive(n, callstk)
+            elif callType == "i":
+                callStack.fibIterative(n, callstk)
+        elif functionType == "c":
+            if callType == "r":
+                callStack.factRecursive(n, callstk)
+            elif callType == "i":
+                callStack.factIterative(n, callstk)
+        else:
+            print("Unsupported function")
 
 
 def checkArgs():
