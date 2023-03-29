@@ -2,7 +2,7 @@
 import sys
 import timeit
 import callStack
-import classes
+import classes as cl
 
 def usage():
     print(" Usage: ClallStackTestHarness n xy")
@@ -16,18 +16,17 @@ def usage():
     print("           i - iterative")
 
 def doCallStack(n, functionType, callType):
-    DSAStack = classes.DSAStack()
+    callstk = cl.DSAStack(1000)
     if functionType == "b":
         if callType == "r":
-            DSAStack.push("fibRecursive("+str(n)+"): "+str(callStack.fibRecursive(n, DSAStack)))
-            DSAStack.printStack()
+            callStack.fibRecursive(n, callstk)
         elif callType == "i":
-            callStack.fibIterative(n)
+            callStack.fibIterative(n, callstk)
     elif functionType == "c":
         if callType == "r":
-            callStack.factRecursive(n)
+            callStack.factRecursive(n, callstk)
         elif callType == "i":
-            callStack.factIterative(n)
+            callStack.factIterative(n, callstk)
     else:
         print("Unsupported function")
 

@@ -106,13 +106,17 @@ class DSAQueue():
 
 class DSAShufflingQueue(DSAQueue):
     def __init__(self, capacity=100):
-        super().__init__(capacity)
+        self._capacity = capacity
+        self._queue = np.zeros(self._capacity, dtype=object)
+        self._count = 0
 
 
 class DSACircularQueue(DSAQueue):
 
     def __init__(self, capacity=100):
-        super().__init__(capacity)
+        self._capacity = capacity
+        self._queue = np.zeros(self._capacity, dtype=object)
+        self._count = 0
         self._frontIdx = 0
 
     def dequeue(self):
