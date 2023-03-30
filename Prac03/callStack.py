@@ -1,14 +1,14 @@
 import classes as cl
 
 
-def display(stack: cl.DSAStack):
-    print("-----Call Stack-----")
+def display(stack):
+    print("\n-----Call Stack-----")
     for i in range(stack._count):
-        print(stack._stack[0])
+        print(stack._stack[i])
     print("-----End  Stack-----")
 
 
-def callStack(stack: cl.DSAStack, function, args):
+def callStack(stack, function, args):
     if function != "":
         stack.push(str(function)+"("+str(args)+")")
     else: 
@@ -22,26 +22,21 @@ def callStack(stack: cl.DSAStack, function, args):
 
 
 # Wrapper
-def fibRecursive(n, stack: cl.DSAStack):
+def fibRecursive(n, stack):
     try:
         if n < 0:
             print("Number must be positive!")
         else:
-            stack = callStack(stack, "fibRecursive", n)
-            display(stack)
-
             fibVal = _fibRecursive(n, stack)
-
-            stack = callStack(stack, "", n)
-            display(stack)
-
             return fibVal
     except TypeError:
         print("input must be a number")
 
 
 # Method
-def _fibRecursive(n, stack: cl.DSAStack):
+def _fibRecursive(n, stack):
+    stack = callStack(stack, "fibRecursive", n)
+    display(stack)
     fibVal = 0
     if (n == 0):
         fibVal = 0
@@ -49,22 +44,17 @@ def _fibRecursive(n, stack: cl.DSAStack):
         fibVal = 1
     else:
         fibVal = fibRecursive(n-1, stack) + fibRecursive(n-2, stack)
+    stack = callStack(stack, "", n)
+    display(stack)
     return fibVal
 
 # Wrapper
-def factRecursive(n, stack: cl.DSAStack):
+def factRecursive(n, stack):
     try:
         if n < 0:
             print("Number must be positive!")
         else:
-            stack = callStack(stack, "factRecursive", n)
-            display(stack)
-
             factVal = _factRecursive(n, stack)
-
-            stack = callStack(stack, "", n)
-            display(stack)
-
             return factVal
     except TypeError:
         print("input must be a number")
@@ -72,61 +62,58 @@ def factRecursive(n, stack: cl.DSAStack):
 
 # Method
 # max 499
-def _factRecursive(n, stack: cl.DSAStack):
+def _factRecursive(n, stack):
+    stack = callStack(stack, "factRecursive", n)
+    display(stack)
     if (n == 0):
-        return 1
+        val = 1
     else:
-        return n * factRecursive((n-1), stack)
+        val = n * factRecursive((n-1), stack)
+    stack = callStack(stack, "", n)
+    display(stack)
+    return val
     
 
 # Wrapper
-def factIterative(n):
+def factIterative(n, stack):
     try:
         if n < 0:
             print("Number must be positive!")
         else:
-            stack = callStack(stack, "factIterative", n)
-            display(stack)
-
-            factVal = _factIterative(n)
-
-            stack = callStack(stack, "", n)
-            display(stack)
-
+            factVal = _factIterative(n, stack)
             return factVal
     except TypeError:
         print("input must be a number")
 
 
 # Method
-def _factIterative(n):
+def _factIterative(n, stack):
+    stack = callStack(stack, "factIterative", n)
+    display(stack)
     nFactorial = 1
     for i in range(n, 1, -1):
         nFactorial = nFactorial * i
+    stack = callStack(stack, "", n)
+    display(stack)
     return nFactorial
     
 
 # Wrapper
-def fibIterative(n, stack: cl.DSAStack):
+def fibIterative(n, stack):
     try:
         if n < 0:
             print("Number must be positive!")
         else:
-            stack = callStack(stack, "fibIterative", n)
-            display(stack)
-
-            fibVal = _fibIterative(n)
-
-            stack = callStack(stack, "", n)
-            display(stack)
-
+            fibVal = _fibIterative(n, stack)
             return fibVal
     except TypeError:
         print("input must be a number")
 
 
 # Method
-def _fibIterative(n):
+def _fibIterative(n, stack):
+    stack = callStack(stack, "fibIterative", n)
+    display(stack)
     fibVal = 0
     currVal = 1
     lastVal = 0
@@ -136,26 +123,10 @@ def _fibIterative(n):
     elif n == 1:
         fibVal = 1
     else:
-        for i in range(2, n):
+        for i in range(2, n+1):
             fibVal = currVal + lastVal
             lastVal = currVal
             currVal = fibVal
-
+    stack = callStack(stack, "", n)
+    display(stack)
     return fibVal
-
-def __main__():
-    try:
-        stack = cl.DSAStack()
-        stack.printStack()
-        nUser = int(input("\nEnter a numer for the fibonacci functions: "))
-        print("The recursive fibonacci function gives a value of: ",fibRecursive(nUser, stack))
-        print("The iterative fibonacci function gives a value of: ",fibIterative(nUser, stack))
-        nUser = int(input("\nEnter a numer for the factorial functions: "))
-        print("The recursive factorial function gives a value of: ",factRecursive(nUser, stack))
-        print("The iterative factorial function gives a value of: ",factIterative(nUser, stack))
-    except Exception as e:
-        print(e)
-
-if __name__ == "__main__":
-    __main__()
-
