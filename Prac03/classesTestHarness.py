@@ -61,7 +61,8 @@ def doTest(capacity, classType, arrayType):
             print("Adding items to Stack")
             for item in A:
                 DSAStack.push(item)
-            DSAStack.printStack()   
+            DSAStack.printStack()
+            print("\nPeeking top of in stack: ", DSAStack.top())   
             print("Is stack empty: ", DSAStack.isEmpty())
             print("Is stack full: ", DSAStack.isFull())
             print("removing items from Stack")
@@ -83,6 +84,7 @@ def doTest(capacity, classType, arrayType):
             DSAQueue.printQueue()   
             print("Is Queue empty: ", DSAQueue.isEmpty())
             print("Is Queue full: ", DSAQueue.isFull())
+            print("\nPeeking first item in queue: ", DSAQueue.peek())
             print("removing items from Queue")
             for i in range(DSAQueue.getCount()):
                 print("removing item: ", DSAQueue.dequeue())
@@ -102,6 +104,7 @@ def doTest(capacity, classType, arrayType):
             DSACircularQueue.printQueue()   
             print("Is Queue empty: ", DSACircularQueue.isEmpty())
             print("Is Queue full: ", DSACircularQueue.isFull())
+            print("\nPeeking first item in queue: ", DSACircularQueue.peek())
             print("\nTesting circularity")
             print("removing item: ", DSACircularQueue.dequeue())
             for i in range(capacity + 2):
@@ -126,7 +129,8 @@ def doTest(capacity, classType, arrayType):
             print("Adding items to Queue")
             for item in A:
                 DSAShufflingQueue.enqueue(item)
-            DSAShufflingQueue.printQueue()   
+            DSAShufflingQueue.printQueue()  
+            print("\nPeeking first item in queue: ", DSAShufflingQueue.peek()) 
             print("Is Shuffling Queue empty: ", DSAShufflingQueue.isEmpty())
             print("Is Shuffling Queue full: ", DSAShufflingQueue.isFull())
             print("removing items from Queue")
