@@ -35,12 +35,23 @@ def _parseInfixToPostfix(equation):
         postfix.enqueue(opStack.pop())
     return postfix
 
+def isOperator(operator):
+    value = False
+    if operator == "+":
+        value = True
+    elif operator == "-":
+        value = True
+    elif operator == "*":
+        value = True
+    elif operator == "/":
+        value = True
+    return value
+
 def _evaluatePostfix(postfixQueue):
     operands = cl.DSAStack(postfixQueue.getCount())
-    operators = ["+", "-", "*", "/",]
     while not postfixQueue.isEmpty():
         item = postfixQueue.dequeue()
-        if item not in operators:
+        if not isOperator(item):
             operands.push(item)
         else:
             op2 = operands.pop()

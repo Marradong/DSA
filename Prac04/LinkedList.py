@@ -1,3 +1,14 @@
+class DSADoublyListNode:
+    
+    def __init__(self, inValue):
+        self._value = self.setValue(inValue)
+        self._next = self.setNext(None)
+
+class DSADoublyLinkedList:
+    def __init__(self):
+        self.head = None
+
+
 class DSAListNode():
 
     def __init__(self, inValue):

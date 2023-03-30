@@ -3,7 +3,7 @@ import classes as cl
 
 def display(stack):
     print("\n-----Call Stack-----")
-    for i in range(stack._count):
+    for i in reversed(range(stack._count)):
         print(stack._stack[i])
     print("-----End  Stack-----")
 
@@ -27,7 +27,11 @@ def fibRecursive(n, stack):
         if n < 0:
             print("Number must be positive!")
         else:
+            stack = callStack(stack, "fibRecursive", n)
+            display(stack)
             fibVal = _fibRecursive(n, stack)
+            stack = callStack(stack, "", n)
+            display(stack)
             return fibVal
     except TypeError:
         print("input must be a number")
@@ -35,8 +39,6 @@ def fibRecursive(n, stack):
 
 # Method
 def _fibRecursive(n, stack):
-    stack = callStack(stack, "fibRecursive", n)
-    display(stack)
     fibVal = 0
     if (n == 0):
         fibVal = 0
@@ -44,8 +46,7 @@ def _fibRecursive(n, stack):
         fibVal = 1
     else:
         fibVal = fibRecursive(n-1, stack) + fibRecursive(n-2, stack)
-    stack = callStack(stack, "", n)
-    display(stack)
+    
     return fibVal
 
 # Wrapper
@@ -54,7 +55,11 @@ def factRecursive(n, stack):
         if n < 0:
             print("Number must be positive!")
         else:
+            stack = callStack(stack, "factRecursive", n)
+            display(stack)
             factVal = _factRecursive(n, stack)
+            stack = callStack(stack, "", n)
+            display(stack)
             return factVal
     except TypeError:
         print("input must be a number")
@@ -63,14 +68,10 @@ def factRecursive(n, stack):
 # Method
 # max 499
 def _factRecursive(n, stack):
-    stack = callStack(stack, "factRecursive", n)
-    display(stack)
     if (n == 0):
         val = 1
     else:
         val = n * factRecursive((n-1), stack)
-    stack = callStack(stack, "", n)
-    display(stack)
     return val
     
 
@@ -80,7 +81,11 @@ def factIterative(n, stack):
         if n < 0:
             print("Number must be positive!")
         else:
+            stack = callStack(stack, "factIterative", n)
+            display(stack)
             factVal = _factIterative(n, stack)
+            stack = callStack(stack, "", n)
+            display(stack)
             return factVal
     except TypeError:
         print("input must be a number")
@@ -88,13 +93,10 @@ def factIterative(n, stack):
 
 # Method
 def _factIterative(n, stack):
-    stack = callStack(stack, "factIterative", n)
-    display(stack)
     nFactorial = 1
     for i in range(n, 1, -1):
         nFactorial = nFactorial * i
-    stack = callStack(stack, "", n)
-    display(stack)
+    
     return nFactorial
     
 
@@ -104,7 +106,11 @@ def fibIterative(n, stack):
         if n < 0:
             print("Number must be positive!")
         else:
+            stack = callStack(stack, "fibIterative", n)
+            display(stack)
             fibVal = _fibIterative(n, stack)
+            stack = callStack(stack, "", n)
+            display(stack)
             return fibVal
     except TypeError:
         print("input must be a number")
@@ -112,8 +118,6 @@ def fibIterative(n, stack):
 
 # Method
 def _fibIterative(n, stack):
-    stack = callStack(stack, "fibIterative", n)
-    display(stack)
     fibVal = 0
     currVal = 1
     lastVal = 0
@@ -127,6 +131,4 @@ def _fibIterative(n, stack):
             fibVal = currVal + lastVal
             lastVal = currVal
             currVal = fibVal
-    stack = callStack(stack, "", n)
-    display(stack)
     return fibVal

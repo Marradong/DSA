@@ -160,20 +160,18 @@ def checkArgs():
     return argsOK
 
 #main program
+def __main__():
+    try:
+        if checkArgs():
+            usage()
+        else:        
+                classType = sys.argv[1][0]
+                arrayType = sys.argv[1][1]
+                capacity = int(sys.argv[2])
 
-if checkArgs():
-    usage()
-else:        
-        classType = sys.argv[1][0]
-        arrayType = sys.argv[1][1]
-        capacity = int(sys.argv[2])
+                doTest(capacity, classType, arrayType)
+    except Exception as e:
+        print(e)
 
-        runningTotal = 0
-
-        startTime = timeit.default_timer()
-        doTest(capacity, classType, arrayType)
-        endTime = timeit.default_timer()
-
-        runningTotal += (endTime - startTime)
-    
-        print(classType + arrayType + " " + str(capacity) + " " + str(runningTotal))
+if __name__ == "__main__":
+    __main__()
