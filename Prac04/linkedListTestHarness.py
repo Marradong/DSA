@@ -3,7 +3,7 @@ import linkedList as LL
 
 
 def usage():
-    print(" Usage: py linkListTestHarness x")
+    print(" Usage: py linkedListTestHarness x")
     print("        where")
     print("        x is one of")
     print("           s - Single-Ended, Singly Linked")
