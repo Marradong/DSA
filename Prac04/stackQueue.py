@@ -33,11 +33,11 @@ class DSAStack():
 class DSAQueue():
 
     def __init__(self):
-        self._list = LL.DSADoublyLinkedList
-    
+        self._list = LL.DSADoublyLinkedList()
 
+    
     def isEmpty(self):
-        return self._list
+        return self._list.isEmpty()
     
 
     def enqueue(self, value):
