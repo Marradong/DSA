@@ -111,11 +111,8 @@ class DSADoublyLinkedList:
     def printList(self):
         if not self.isEmpty():
             print("---Head---")
-            print(self._head.getValue())
-            nextNode = self._head.getNext()
-            while nextNode != None:
-                print(nextNode.getValue())
-                nextNode = nextNode.getNext()
+            for item in self:
+                print(item)
             print("---Tail---")
     
     def __iter__(self):
@@ -234,11 +231,8 @@ class DSASinglyLinkedList():
     def printList(self):
         if not self.isEmpty():
             print("---Head---")
-            print(self._head.getValue())
-            nextNode = self._head.getNext()
-            while nextNode != None:
-                print(nextNode.getValue())
-                nextNode = nextNode.getNext()
+            for item in self:
+                print(item)
             print("---Tail---")
 
     
