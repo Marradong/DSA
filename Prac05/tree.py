@@ -64,28 +64,22 @@ class DSABinarySearchTree():
 
 
     def insert(self, key, value):
-        self._insertRecursive(key, value, self._root)
+        self._root = self._insertRecursive(key, value, self._root)
         return
 
     
     def _insertRecursive(self, key, value, curr: DSATreeNode): 
-        if key < curr.getKey():
-            next = curr.getLeft()
-            if next == None:
-                newNode = DSATreeNode(key, value)
-                curr.setLeft(newNode)
-            else:
-                self._insertRecursive(key, value, next)
-        elif key > curr.getKey():
-            next = curr.getRight()
-            if next == None:
-                newNode = DSATreeNode(key, value)
-                curr.setRight(newNode)
-            else:
-                self._insertRecursive(key, value, next)
+        updateNode = curr
+        if curr == None:
+            newNode = DSATreeNode(key, value)
+            updateNode = newNode
+        elif key == curr.getKey():
+            raise ValueError("Key " + str(key) + " already exists")
+        elif key < curr.getKey():
+            curr.setLeft(self._insertRecursive(key, value, curr.getLeft()))
         else:
-            raise ValueError("Key " + key + " already exists")
-        
+            curr.setRight(self._insertRecursive(key, value, curr.getRight()))
+        return updateNode
     
     def delete(self, key):
         self._root = self._deleteRecursive(key, self._root)
@@ -130,23 +124,32 @@ class DSABinarySearchTree():
         
         
     def display(self):
-        ...
+        self._displyRecursive(0, self._root)
+        return
+
+    def _displyRecursive(self, level, curr: DSATreeNode):
+        if curr != None:
+            level = level + 1
+            self._displyRecursive(level, curr.getRight())
+            print('    '*level + "———"+ str(curr.getValue()))
+            self._displyRecursive(level, curr.getLeft())
 
 
     def height(self):
         return self._heightRec(self._root)
 
     def _heightRec(self, curNode):
+        
         if curNode == None:
             htSoFar = -1
         else:
             leftHt = self._heightRec(curNode.getLeft())
             rightHt = self._heightRec(curNode.getRight())
         
-        if leftHt > rightHt:
-            htSoFar = leftHt + 1
-        else:
-            htSoFar = rightHt + 1
+            if leftHt > rightHt:
+                htSoFar = leftHt + 1
+            else:
+                htSoFar = rightHt + 1
     
         return htSoFar
     
@@ -167,16 +170,14 @@ class DSABinarySearchTree():
     
 
     def balance(self):
-        balance = 0
-        leftHeight = self._heightRec(self._root.getLeft())
-        rightHeight = self._heightRec(self._root.getRight())
+        balance = 0.0
+        leftHeight = self._heightRec(self._root.getLeft()) + 1
+        rightHeight = self._heightRec(self._root.getRight()) + 1
 
-        if (leftHeight == -1) or (rightHeight == -1):
-            balance = 0
-        elif leftHeight > rightHeight:
-            balance = (rightHeight / leftHeight) * 100
+        if leftHeight > rightHeight:
+            balance = (float(rightHeight) / float(leftHeight)) * 100
         else:
-            balance = (leftHeight / rightHeight) * 100
+            balance = (float(leftHeight) / float(rightHeight)) * 100
         
         return balance
 
@@ -195,7 +196,7 @@ class DSABinarySearchTree():
             llist = self._inorderRecursive(curr.getLeft(), llist)
             llist.insertLast(curr.getValue())
             llist = self._inorderRecursive(curr.getRight(), llist)
-            return llist
+        return llist
     
 
     def preorder(self):
@@ -211,7 +212,7 @@ class DSABinarySearchTree():
             llist.insertLast(curr.getValue())
             llist = self._preorderRecursive(curr.getLeft(), llist)
             llist = self._preorderRecursive(curr.getRight(), llist)
-            return llist
+        return llist
 
     
     def postorder(self):
@@ -227,7 +228,7 @@ class DSABinarySearchTree():
             llist = self._postorderRecursive(curr.getLeft(), llist)
             llist = self._postorderRecursive(curr.getRight(), llist)
             llist.insertLast(curr.getValue())
-            return llist
+        return llist
 
     ## alternative delete function
 
@@ -296,3 +297,20 @@ class DSABinarySearchTree():
     #         successor.setRight(delNode.getRight())
         
     #     return successor
+
+    # if key < curr.getKey():
+    #         next = curr.getLeft()
+    #         if next == None:
+    #             newNode = DSATreeNode(key, value)
+    #             curr.setLeft(newNode)
+    #         else:
+    #             self._insertRecursive(key, value, next)
+    #     elif key > curr.getKey():
+    #         next = curr.getRight()
+    #         if next == None:
+    #             newNode = DSATreeNode(key, value)
+    #             curr.setRight(newNode)
+    #         else:
+    #             self._insertRecursive(key, value, next)
+    #     else:
+    #         raise ValueError("Key " + key + " already exists")
