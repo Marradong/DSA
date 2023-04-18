@@ -48,7 +48,7 @@ def checkArgs():
             
 
 def __main__():
-    if len(sys.argv) != 3:
+    if len(sys.argv) != 2:
         usage()
     else:
         try:
@@ -57,17 +57,24 @@ def __main__():
                 try: 
                     with open(fileName, "rb") as dataFile: 
                         DSAtree = pickle.load(dataFile) 
+                    dataFile.close()
                 except Exception as e:
                     print(e)
             elif sys.argv[1] == "rc":
                 fileName = str(input("\nPlease provide a file name to read from: "))
                 try:
-                    with open(fileName,"r") as openFile:
-                        data = openFile.readline()
+                    with open(fileName,"r") as csvFile:
+                        treeOrder = csvFile.readline()
+                        treeItems = treeOrder.split(",")
+                        DSAtree = tree.DSABinarySearchTree()
+                        for node in treeItems:
+                            valueKey = node.split(":")
+                            DSAtree.insert(valueKey[1], valueKey[0])
+                    csvFile.close()
                 except Exception as e:
                     print(e)
 
-                openFile.close()
+                
             elif sys.argv[1] == "nt":
                 print("\nInitialising Tree")
                 DSAtree = tree.DSABinarySearchTree()
@@ -83,7 +90,10 @@ def __main__():
                 if userCommand == "i":
                     userVal = input("Please enter a new value: ")
                     userKey = input("Please enter a new key: ")
-                    DSAtree.insert(userKey, userVal)
+                    try:
+                        DSAtree.insert(int(userKey), userVal)
+                    except TypeError:
+                        print("key must be an integer! Node was not added to tree.")
                 elif userCommand == "f":
                     userKey = input("Please enter a key to find: ")
                     print("Result: ", DSAtree.find(userKey))
@@ -114,24 +124,53 @@ def __main__():
                 elif userCommand == "b":
                     print("Tree Balance: ", DSAtree.balance())
                 elif userCommand == "in":
-                    print("Inorder: ", DSAtree.inorder()) 
+                    print(DSAtree.inorder()) 
                 elif userCommand == "pre":
-                    print("Preorder: ", DSAtree.preorder())
+                    print(DSAtree.preorder())
                 elif userCommand == "post":
-                    print("Postorder: ", DSAtree.postorder())
+                    print(DSAtree.postorder())
                 elif userCommand == "wc":
                     traversalMethods()
                     userMethod = str(input("\nPlease enter a valid method: "))
                     if userMethod == "in":
-                        ...
+                        inorderStr = DSAtree.inorder()
+                        inorderItems = inorderStr.split(" ")
+                        newLine = ",".join(inorderItems)
+                        newLine = newLine.lstrip(",")
+                        try: 
+                            with open("tree.csv", "w") as csvFile: 
+                                csvFile.write(newLine) 
+                            csvFile.close()
+                            print("Inorder written to file")
+                        except Exception as e:
+                            print(e)
                     elif userMethod == "pre":
-                        ...
+                        preorderStr = DSAtree.inorder()
+                        preorderItems = preorderStr.split(" ")
+                        newLine = ",".join(preorderItems)
+                        newLine = newLine.lstrip(",")
+                        try: 
+                            with open("tree.csv", "w") as csvFile: 
+                                csvFile.write(newLine) 
+                            csvFile.close()
+                            print("Preorder written to file")
+                        except Exception as e:
+                            print(e)
                     elif userMethod == "post":
-                        ...
+                        postorderStr = DSAtree.inorder()
+                        postorderItems = postorderStr.split(" ")
+                        newLine = ",".join(postorderItems)
+                        newLine = newLine.lstrip(",")
+                        try: 
+                            with open("tree.csv", "w") as csvFile: 
+                                csvFile.write(newLine) 
+                            csvFile.close()
+                            print("Postorder written to file")
+                        except Exception as e:
+                            print(e)
                     else:
                         print("Invalid Traversal Method")
                         userCommand = ""
-                    
                 elif userCommand == "ws":
                     try: 
                         with open("tree", "wb") as dataFile: 

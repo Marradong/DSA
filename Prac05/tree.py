@@ -1,4 +1,5 @@
 import linkedList as LL
+import numpy as np
 
 class DSATreeNode():
 
@@ -185,16 +186,17 @@ class DSABinarySearchTree():
     def inorder(self):
         llist = LL.DSADoublyLinkedList()
         llist = self._inorderRecursive(self._root, llist)
-        print("In Order Traversal: ", end=" ")
+        inorderStr = ""
         for item in llist:
-            print(item, end=" ")
-        print("\n")
+            inorderStr = inorderStr + " " + str(item)
+        return inorderStr
 
     
     def _inorderRecursive(self, curr: DSATreeNode, llist: LL.DSADoublyLinkedList):
         if curr != None:
             llist = self._inorderRecursive(curr.getLeft(), llist)
-            llist.insertLast(curr.getValue())
+            valueToInsert = str(curr.getValue()) + ":" + str(curr.getKey())
+            llist.insertLast(valueToInsert)
             llist = self._inorderRecursive(curr.getRight(), llist)
         return llist
     
@@ -202,14 +204,15 @@ class DSABinarySearchTree():
     def preorder(self):
         llist = LL.DSADoublyLinkedList()
         llist = self._preorderRecursive(self._root, llist)
-        print("Pre Order Traversal: ", end=" ")
+        preorderStr = ""
         for item in llist:
-            print(item, end=" ")
-        print("\n")
+            preorderStr = preorderStr + " " + str(item)
+        return preorderStr
 
     def _preorderRecursive(self, curr: DSATreeNode, llist: LL.DSADoublyLinkedList):
         if curr != None:
-            llist.insertLast(curr.getValue())
+            valueToInsert = str(curr.getValue()) + ":" + str(curr.getKey())
+            llist.insertLast(valueToInsert)
             llist = self._preorderRecursive(curr.getLeft(), llist)
             llist = self._preorderRecursive(curr.getRight(), llist)
         return llist
@@ -218,99 +221,15 @@ class DSABinarySearchTree():
     def postorder(self):
         llist = LL.DSADoublyLinkedList()
         llist = self._postorderRecursive(self._root, llist)
-        print("Post Order Traversal: ", end=" ")
+        postorderStr = ""
         for item in llist:
-            print(item, end=" ")
-        print("\n")
+            postorderStr = postorderStr + " " + str(item)
+        return postorderStr
 
     def _postorderRecursive(self, curr: DSATreeNode, llist: LL.DSADoublyLinkedList):
         if curr != None:
             llist = self._postorderRecursive(curr.getLeft(), llist)
             llist = self._postorderRecursive(curr.getRight(), llist)
-            llist.insertLast(curr.getValue())
+            valueToInsert = str(curr.getValue()) + ":" + str(curr.getKey())
+            llist.insertLast(valueToInsert)
         return llist
-
-    ## alternative delete function
-
-    # def delete(self, key):
-    #     current = self._root
-    #     parent = self._root
-    #     isLeftChild = True
-
-    #     while (current.getKey() != key):
-    #         parent = current
-    #         if (key < current.getKey()):
-    #             isLeftChild = True
-    #             current = current.getLeft()
-    #         else:
-    #             isLeftChild = False
-    #             current = current.getRight()
-
-    #         if current == None:
-    #             raise ValueError("Key " + key + " was not found")
-            
-    #     if (current.getLeft() == None) and (current.getRight() == None):
-    #         if (current == self._root):
-    #             self._root = None
-    #         elif (isLeftChild):
-    #             parent.setLeft(None)
-    #         else:
-    #             parent.setRight(None)
-    #     elif (current.getRight() == None):
-    #         if (current == self._root):
-    #             self._root = current.getLeft()
-    #         elif (isLeftChild):
-    #             parent.setLeft(current.getLeft())
-    #         else:
-    #             parent.setRight(current.getRight())
-    #     elif (current.getLeft() == None):
-    #         if (current == self._root):
-    #             self._root = current.getRight()
-    #         elif (isLeftChild):
-    #             parent.setLeft(current.getLeft())
-    #         else:
-    #             parent.setRight(current.getRight())
-    #     else:
-    #         successor = self._getSuccessor(current)
-
-    #         if (current == self._root):
-    #             self._root = successor
-    #         elif (isLeftChild):
-    #             parent.setLeft(successor)
-    #         else:
-    #             parent.setRight(successor)
-    #         successor.setLeft(current.getLeft())
-    #     return
-
-
-    # def _getSuccessor(delNode: DSATreeNode):
-    #     parent = delNode
-    #     successor = delNode
-    #     current = delNode.getRight()
-    #     while (current != None):
-    #         parent = successor
-    #         successor = current
-    #         current.getLeft()
-        
-    #     if (successor != delNode.getRight()):
-    #         parent.setLeft(successor.getRight())
-    #         successor.setRight(delNode.getRight())
-        
-    #     return successor
-
-    # if key < curr.getKey():
-    #         next = curr.getLeft()
-    #         if next == None:
-    #             newNode = DSATreeNode(key, value)
-    #             curr.setLeft(newNode)
-    #         else:
-    #             self._insertRecursive(key, value, next)
-    #     elif key > curr.getKey():
-    #         next = curr.getRight()
-    #         if next == None:
-    #             newNode = DSATreeNode(key, value)
-    #             curr.setRight(newNode)
-    #         else:
-    #             self._insertRecursive(key, value, next)
-    #     else:
-    #         raise ValueError("Key " + key + " already exists")
