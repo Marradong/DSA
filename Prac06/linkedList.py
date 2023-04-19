@@ -124,7 +124,7 @@ class DSADoublyLinkedList:
         if self._curr == None:
             raise StopIteration
         else:
-            currVal = self._curr.getValue()
+            currVal = self._curr
             self._curr = self._curr.getNext()
         return currVal
 
