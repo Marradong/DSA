@@ -22,6 +22,7 @@ def __main__():
     DSAgraph.addEdge("D","A")
 
     DSAgraph.displayAsList()
+    DSAgraph.displayAsMatrix()
 
     print("\nDoes Graph have vertex A: ",DSAgraph.hasVertex("A"))
     print("Does Graph have vertex E: ",DSAgraph.hasVertex("E"))

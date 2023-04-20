@@ -1,4 +1,6 @@
 import linkedList as LL
+import stackQueue as sq
+import numpy as np
 
 class DSAGraphVertex():
 
@@ -53,7 +55,7 @@ class DSAGraph():
         vertex1 = self.getVertex(label1)
         vertex2 = self.getVertex(label2)
         if (vertex1 == None) or (vertex2 == None):
-            print("One vertex does not exist")
+            print("One vertex does not exist ")
         else:
             vertex1.addEdge(vertex2)
             vertex2.addEdge(vertex1)
@@ -105,6 +107,7 @@ class DSAGraph():
                 adjacentFound = True
         return adjacentFound
     
+
     def displayAsList(self):
         print("\nAdjacency List: ")
         for node in self.vertices:
@@ -116,4 +119,62 @@ class DSAGraph():
             
 
     def displayAsMatrix(self):
-        ...
+        print("\nAdjacency Matrix: ")
+        print(" ", end="")
+        copyOfList = LL.DSADoublyLinkedList()
+        for v in self.vertices:
+            print(" ", v.getValue().getLabel(), end="")
+            copyOfList.insertLast(v.getValue())
+        print("")
+        
+        for v in self.vertices:
+            print(v.getValue().getLabel(), " ", end="")
+            for v2 in copyOfList:
+                if self.isAdjacent(v.getValue().getLabel(), v2.getValue().getLabel()):
+                    print("1  ", end="")
+                else:
+                    print("0  ", end="")
+            print("")
+        print("")
+
+
+    def breadthFirstSearch(self):
+        T = sq.DSAQueue()
+        Q = sq.DSAQueue()
+        for node in self.vertices:
+            node.getValue().clearVisited()
+        v = self.vertices.peekFirst().getValue()
+        v.setVisited()
+        Q.enqueue(v)
+        while not Q.isEmpty():
+            v = Q.dequeue()
+            for w in v.getAdjacent():
+                if w.getValue().getVisited() == False:
+                    T.enqueue(v.getLabel())
+                    T.enqueue(w.getValue().getLabel())
+                    w.getValue().setVisited()
+                    Q.enqueue(w.getValue())
+        print("\nBreadth First Search:")
+        while not T.isEmpty():
+            print(T.dequeue())
+
+    def depthFirstSearch(self):
+        T = sq.DSAQueue()
+        S = sq.DSAStack()
+        for node in self.vertices:
+            node.getValue().clearVisited()
+        v = self.vertices.peekFirst().getValue()
+        v.setVisited()
+        S.push(v)
+        while not S.isEmpty():
+            for w in v.getAdjacent():
+                if w.getValue().getVisited() == False:
+                    T.enqueue(v.getLabel())
+                    T.enqueue(w.getValue().getLabel())
+                    w.getValue().setVisited()
+                    S.push(w.getValue())
+                    v = w.getValue()
+            v = S.pop()
+        print("\nDepth First Search:")
+        while not T.isEmpty():
+            print(T.dequeue())

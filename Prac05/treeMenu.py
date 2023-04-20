@@ -98,7 +98,7 @@ def __main__():
                     userKey = input("Please enter a key to find: ")
                     print("Result: ", DSAtree.find(userKey))
                 elif userCommand == "r":
-                    userKey = input("Please enter a key to remove: ")
+                    userKey = int(input("Please enter a key to remove: "))
                     DSAtree.delete(userKey)
                 elif userCommand == "d":
                     traversalMethods()

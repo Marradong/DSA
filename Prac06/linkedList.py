@@ -73,7 +73,7 @@ class DSADoublyLinkedList:
     
     def peekFirst(self):
         if not self.isEmpty():
-            nodeValue = self._head.getValue()
+            nodeValue = self._head
             return nodeValue
 
 
@@ -116,17 +116,10 @@ class DSADoublyLinkedList:
             print("---Tail---")
     
     def __iter__(self):
-        self._curr = self._head
-        return self
-    
-    def __next__(self):
-        currVal = None
-        if self._curr == None:
-            raise StopIteration
-        else:
-            currVal = self._curr
-            self._curr = self._curr.getNext()
-        return currVal
+        currentNode = self._head
+        while currentNode:
+            yield currentNode
+            currentNode = currentNode.getNext()
 
 
 
