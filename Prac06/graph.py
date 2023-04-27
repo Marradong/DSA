@@ -50,6 +50,7 @@ class DSAGraph():
             self.vertices.insertLast(newVertex)
         else:
             print("Vertex already exists")
+        return
     
     def addEdge(self, label1, label2):
         vertex1 = self.getVertex(label1)
@@ -61,6 +62,7 @@ class DSAGraph():
             vertex2.addEdge(vertex1)
             edgeLabel = str(vertex1.getLabel()) + str(vertex2.getLabel())
             self.edges.insertLast(edgeLabel)
+        return
 
 
     def hasVertex(self, label):
@@ -116,6 +118,7 @@ class DSAGraph():
             for item in vertex.getAdjacent():
                 stringToPrint = stringToPrint + str(item.getValue().getLabel()) + " "
             print(stringToPrint)
+        return
             
 
     def displayAsMatrix(self):

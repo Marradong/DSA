@@ -28,7 +28,7 @@ def __main__():
     DSAgraph1.depthFirstSearch()
 
 
-    print("Initialising graph 2")
+    print("\nInitialising graph 2")
     DSAgraph2 = graph.DSAGraph()
     DSAgraph2.addVertex("A", "A")
     DSAgraph2.addVertex("B", "B")

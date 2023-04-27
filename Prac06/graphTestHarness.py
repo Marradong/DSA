@@ -2,6 +2,13 @@ import graph
 
 
 def __main__():
+
+    print("\nCreating the Below Graph\n")
+    print("\tA - B")
+    print("\t|   |")
+    print("\tD - C")
+
+
     DSAgraph = graph.DSAGraph()
     print("\nAdding Vertex A with value 1")
     DSAgraph.addVertex("A",1)
