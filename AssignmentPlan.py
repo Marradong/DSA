@@ -77,7 +77,21 @@ except IOError as e:
 #         + 40 or less = LOW
 #         + 41 to 55 = MEDIUM
 #         + 56 or more = HIGH
-
+# LOW LOW LOW = 0
+# LOW LOW MED = 1
+# LOW LOW HIGH = 2
+# LOW MED MED = 3
+# LOW MED HIGH = 4
+# LOW HIGH HIGH = 5
+# MED MED MED = 6
+# MED MED HIGH = 7
+# MED HIGH HIGH = 8
+# HIGH HIGH HIGH = 9
+# 
+# 2 4 5 | 4 7 8 | 5 8 9
+# 1 3 4 | 3 6 7 | 4 7 8
+# 0 1 2 | 1 3 4 | 2 4 5 
+# 
 # Provide itinerary
 # - Provide distances and time between locations for UAV
 # - Use other algorithms (not BFS or DFS)
