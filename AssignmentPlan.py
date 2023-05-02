@@ -77,21 +77,49 @@ except IOError as e:
 #         + 40 or less = LOW
 #         + 41 to 55 = MEDIUM
 #         + 56 or more = HIGH
-# LOW LOW LOW = 0
-# LOW LOW MED = 1
-# LOW LOW HIGH = 2
-# LOW MED MED = 3
-# LOW MED HIGH = 4
-# LOW HIGH HIGH = 5
-# MED MED MED = 6
-# MED MED HIGH = 7
-# MED HIGH HIGH = 8
-# HIGH HIGH HIGH = 9
-# 
-# 2 4 5 | 4 7 8 | 5 8 9
-# 1 3 4 | 3 6 7 | 4 7 8
-# 0 1 2 | 1 3 4 | 2 4 5 
-# 
+#     . Risk Levels
+#           LOW LOW LOW = 0
+#           LOW LOW MED = 1
+#           LOW LOW HIGH = 2
+#           LOW MED MED = 3
+#           LOW MED HIGH = 4
+#           LOW HIGH HIGH = 5
+#           MED MED MED = 6
+#           MED MED HIGH = 7
+#           MED HIGH HIGH = 8
+#           HIGH HIGH HIGH = 9
+#      . Resulting Matrix
+#                Low     Med    High    WindSpeed
+#           H | 2 4 5 | 4 7 8 | 5 8 9
+#           M | 1 3 4 | 3 6 7 | 4 7 8   Humidity
+#           L | 0 1 2 | 1 3 4 | 2 4 5   
+#               L M H   L M H   L M H   Temperature
+
+def getRisk(temperature, humidity, windSpeed):
+    if(25 <= temperature <= 32):
+        tIDX = 0
+    elif(33 <= temperature <= 40):
+        tIDX = 1
+    elif(temperature >= 41):
+        tIDX = 2
+    
+    if(humidity >= 51):
+        hIDX = 0
+    elif(3 <= humidity <= 50):
+        hIDX = 1
+    elif(humidity <= 30):
+        hIDX = 2
+    
+    
+    if(windSpeed <= 40):
+        wIDX = 0
+    elif(41 <= windSpeed <= 55):
+        wIDX = 1
+    elif(windSpeed >= 56):
+        wIDX = 2
+    
+    return risk_matrix[tIDX][hIDX][wIDX]
+
 # Provide itinerary
 # - Provide distances and time between locations for UAV
 # - Use other algorithms (not BFS or DFS)
