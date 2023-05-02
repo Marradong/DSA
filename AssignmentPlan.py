@@ -77,7 +77,7 @@ except IOError as e:
 #         + 40 or less = LOW
 #         + 41 to 55 = MEDIUM
 #         + 56 or more = HIGH
-#     . Risk Levels
+#     . Risk Levels (in any order of parameters)
 #           LOW LOW LOW = 0
 #           LOW LOW MED = 1
 #           LOW LOW HIGH = 2
@@ -95,7 +95,19 @@ except IOError as e:
 #           L | 0 1 2 | 1 3 4 | 2 4 5   
 #               L M H   L M H   L M H   Temperature
 
+risk_matrix = np.array([[[0, 1, 2], [1, 3, 4], [2, 4, 5]], [[1, 3, 4], [3, 6, 7], [4, 7, 8]], [[2, 4, 5], [4, 7, 8], [5, 8, 9]]])
+
 def getRisk(temperature, humidity, windSpeed):
+    if (humidity < 0):
+        print("Incorrect Humidity! Must be 0 or above")
+    elif (windSpeed < 0):
+        print("Incorrect Wind Speed! Must be 0 or above")
+    elif temperature < 25:
+        print("Incorrect Temperature! Must be 25 or above")
+    else:
+        return _getRisk(temperature, humidity, windSpeed)
+
+def _getRisk(temperature, humidity, windSpeed):
     if(25 <= temperature <= 32):
         tIDX = 0
     elif(33 <= temperature <= 40):
@@ -105,11 +117,10 @@ def getRisk(temperature, humidity, windSpeed):
     
     if(humidity >= 51):
         hIDX = 0
-    elif(3 <= humidity <= 50):
+    elif(31 <= humidity <= 50):
         hIDX = 1
     elif(humidity <= 30):
         hIDX = 2
-    
     
     if(windSpeed <= 40):
         wIDX = 0
