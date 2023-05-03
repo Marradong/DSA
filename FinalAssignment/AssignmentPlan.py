@@ -7,8 +7,8 @@
 # CODE:
 import sys
 import numpy as np
-from Prac06 import graph
-from Prac07 import hash
+import graph
+import hash
 
 LocFileIDX = 1
 DataFileIDX = 2
