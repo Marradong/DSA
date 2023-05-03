@@ -78,11 +78,11 @@ def merge(A, leftIdx, midIdx, rightIdx):
     for ii in range(i, midIdx+1):
         tempArr[k] = A[ii]
         k = k + 1
-    for jj in range(j, rightIdx):
+    for jj in range(j, rightIdx+1):
         tempArr[k] = A[jj]
         k = k + 1
-    for kk in range(leftIdx, rightIdx-1):
-        A[kk] = tempArr[kk - leftIdx]
+    for kk in range(leftIdx, rightIdx+1):
+        A[kk] = tempArr[kk-leftIdx]
     return
 
 
