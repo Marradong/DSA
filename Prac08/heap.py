@@ -28,7 +28,7 @@ class DSAHeapEntry():
 class DSAHeap():
 
     def __init__(self):
-        self._heap = np.empty(100, dtype=DSAHeapEntry)
+        self._heap = np.empty(10000, dtype=DSAHeapEntry)
         self._count = 0
 
     
@@ -84,15 +84,17 @@ class DSAHeap():
 
 
     def _heapify(self):
-        for i in range(((self._count//2)-1), -1, -1):
+        for i in range((int((self._count-1)/2)-1), -1, -1):
             self.trickleDown(i)
         return
     
 
     def heapSort(self):
         self._heapify()
-        for i in range((self._count-1), 0, -1):
+        for i in range(((self._count-1)-1), -1, -1):
             temp = self._heap[0]
             self._heap[0] = self._heap[i]
             self._heap[i] = temp
+            self.trickleDown(0)
             self.trickleDown(i)
+

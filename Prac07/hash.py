@@ -274,7 +274,10 @@ class DSALinearHashTable():
                 self.put(oldArray[j]._key, oldArray[j]._value)
         return 
     
-
+    # modular operator ensures index is within the array length
+    # uses simple calculations and a small (ish depending on key length) for loop
+    # uses the ASCII code for each item in the string meaning it will always return the same index
+    # does a decent job of distributing keys
     def hash(self, inKey):
         hashIdx = 0
         for i in range(len(inKey)):

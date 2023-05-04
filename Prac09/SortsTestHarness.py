@@ -114,4 +114,4 @@ else:
 
              runningTotal += (endTime - startTime)
     
-        print(sortType + arrayType + " " + str(n) + " " + str(runningTotal/(REPEATS - 1)))
+        print(sortType + arrayType + " " + str(n) + " " + str(round(runningTotal/(REPEATS - 1), 5)))

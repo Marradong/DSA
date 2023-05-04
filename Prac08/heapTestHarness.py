@@ -39,16 +39,41 @@ def __main__():
     print("\nRemoving item - Value: ", DSAHeap.remove())
     DSAHeap.display()
 
-    sortTest = heap.DSAHeap()
-    randomArray = np.random.randint(0, 10, 10)
-    for i in range(len(randomArray)):
-        sortTest.add(randomArray[i], randomArray[i])
-    print("\nBefore Sort")
-    sortTest.display()
-    print("\nAfter Sort")
-    sortTest.heapSort()
-    sortTest.display()
-
+    try:
+        trySort = input("\nWould you like to test heapSort()? (Yes/No): ")
+        if trySort == "Yes":
+            sortTest = heap.DSAHeap()
+            sortInput = input("Would you like to test from a csv? (Yes/No): ")
+            if sortInput == "Yes":
+                fileName = input("Please enter the file name: ")
+                fileObj = open(fileName, "r")
+                line = fileObj.readline()
+                while line:
+                    line = line.strip("\n")
+                    splitLine = line.split(",")
+                    sortTest.add(splitLine[0], splitLine[0])
+                    line = fileObj.readline()
+                fileObj.close()
+            else:
+                arrLength = int(input("Please enter a length of array for testing: "))
+                randomArray = np.random.randint(0, 10, arrLength)
+                print("\nTesting Heap sort with a random array of size", arrLength, "numbers 0-9")
+                for i in range(len(randomArray)):
+                    sortTest.add(randomArray[i], randomArray[i])
+                print("\nArray Before Sort:")
+                for i in range(len(randomArray)):
+                    print(randomArray[i], end=", ")
+            print("\nSort Result:")
+            sortTest.heapSort()
+            for i in range(sortTest._count):
+                print(sortTest.remove(), end=", ")
+            print("\n")
+        else:
+            print("Sorting will not be tested")
+    except ValueError:
+        print("Please ensure inputs are entered correctly!")
+    except IOError as e:
+        print("File processing Error: ", e)
 
 
 if __name__ == "__main__":
