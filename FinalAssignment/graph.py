@@ -1,6 +1,22 @@
 import linkedList as LL
 import stackQueue as sq
-import numpy as np
+
+
+class DSAGraphEdge():
+    
+    def __init__(self, toVertex, fromVertex, inValue):
+        self._to = toVertex
+        self._from = fromVertex
+        self._value = inValue
+    
+    def getValue(self):
+        return self._value
+
+    def getTo(self):
+        return self._value
+    
+    def getFrom(self):
+        return self._value
 
 class DSAGraphVertex():
 
@@ -19,8 +35,9 @@ class DSAGraphVertex():
     def getAdjacent(self):
         return self._links
     
-    def addEdge(self, vertex):
-        self._links.insertLast(vertex)
+    def addEdge(self, vertex, value=None):
+        newEdge = DSAGraphEdge(vertex, self, value)
+        self._links.insertLast(newEdge)
         return
     
     def setVisited(self):
@@ -52,16 +69,16 @@ class DSAGraph():
             print("Vertex already exists")
         return
     
-    def addEdge(self, label1, label2):
+    def addEdge(self, label1, label2, value=None):
         vertex1 = self.getVertex(label1)
         vertex2 = self.getVertex(label2)
         if (vertex1 == None) or (vertex2 == None):
             print("One vertex does not exist ")
         else:
-            vertex1.addEdge(vertex2)
-            vertex2.addEdge(vertex1)
-            edgeLabel = str(vertex1.getLabel()) + str(vertex2.getLabel())
-            self.edges.insertLast(edgeLabel)
+            vertex1.addEdge(vertex2, value)
+            vertex2.addEdge(vertex1, value)
+            newEdge = DSAGraphEdge(vertex1, vertex2, value)
+            self.edges.insertLast(newEdge)
         return
 
 
