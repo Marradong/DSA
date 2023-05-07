@@ -108,6 +108,25 @@ class DSADoublyLinkedList:
                 self._tail.setNext(None)
             return nodeValue
         
+    def remove(self, value):
+        curr = self._head
+        while curr and (curr.getValue() != value):
+            curr = curr.getNext()
+        
+        if not curr:
+            print("Node with value: ", value, " does not exist")
+        elif curr == self._head:
+            self.removeFirst()
+        elif curr == self._tail:
+            self.removeLast()
+        else:
+            prev = curr.getPrev()
+            next = curr.getNext()
+            prev.setNext(next)
+            next.setPrev(prev)
+        return
+        
+        
     def printList(self):
         if not self.isEmpty():
             print("---Head---")

@@ -20,7 +20,9 @@ def printCommands():
     print("\nHere is a list of valid commands (command - description): ")
     print("           ds - Display Map")
     print("           il - Insert Location")
+    print("           ic - Insert Connection")
     print("           dl - Delete Location")
+    print("           dc - Delete Connection")
     print("           sl - Search Location/s")
     print("           it - Provide Itinerary")
     print("           cm - Close Menu")
@@ -73,12 +75,12 @@ def __main__():
             locationFile = open(lfileName, "r")
             graphDimensions = locationFile.readline().split()
             numVerticies = graphDimensions[0]
-            numEdges = graphDimensions[1]
+            numEdges = int(graphDimensions[1])
             locationGraph = graph.DSAGraph() 
             for i in range(numEdges):
                 newEdge = locationFile.readline().strip("\n").split()
-                locationGraph.addVertex(newEdge[0], newEdge[2])
-                locationGraph.addVertex(newEdge[1], newEdge[2])
+                locationGraph.addVertex(newEdge[0], newEdge[0])
+                locationGraph.addVertex(newEdge[1], newEdge[1])
                 locationGraph.addEdge(newEdge[0],newEdge[1], newEdge[2])
         except IOError as e:
             print(e)
@@ -96,7 +98,7 @@ def __main__():
                 windSpeed = locationData.split()[3]
                 key = ord(vertex)
                 value = str(temperature) + "," + str(humidity) + "," + str(windSpeed)
-                uavData.put(key, value)
+                uavData.put(str(key), value)
                 locationData = dataFile.readline()
         except IOError as e:
             print(e)
@@ -112,19 +114,67 @@ def __main__():
             if userCommand == "ds":
                 locationGraph.displayAsList()
             # endregion
-            # region TASK3 - insert operation
+            # region TASK3 - insert location operation
             elif userCommand == "il":
-                ...
+                newLocLbl = str(input("\nPlease enter a label for the new location: "))
+                locationGraph.addVertex(newLocLbl, newLocLbl)
+
+                print("Please provide location data below")
+                temperature  = str(input("\nPlease enter the temperature: "))
+                humidity  = str(input("\nPlease enter the humidity: "))
+                windSpeed  = str(input("\nPlease enter the wind : "))
+                value = str(temperature) + "," + str(humidity) + "," + str(windSpeed)
+                uavData.put(newLocLbl, value)
+
+                print("\nLocation Added!")
+
+                edgeVertex = str(input("\nPlease enter an existing location to add a connection: "))
+                edgeLength = str(input("\nPlease enter the distance between locations: "))
+                locationGraph.addEdge(newLocLbl, edgeVertex, edgeLength)
+
+                print("\Connection Added!")
+
+                addAnotherEdge = str(input("\nWould you like to add another connection? (Yes/No): "))
+                while addAnotherEdge == "Yes":
+                    edgeVertex = str(input("\nPlease enter an existing location to add a connection: "))
+                    edgeLength = str(input("\nPlease enter the distance between locations: "))
+                    locationGraph.addEdge(newLocLbl, edgeVertex, edgeLength)
+                    addAnotherEdge = str(input("\nWould you like to add another connection? (Yes/No): "))
             # endregion
-            # region TASK3 - delete operation
+            # region TASK3 - insert connection operation
+            elif userCommand == "ic":
+                fromVertex = str(input("\nPlease enter the first location of the connection: "))
+                toVertex = str(input("\nPlease enter the second location of the connection: "))
+                edgeLength = str(input("\nPlease enter the distance between locations: "))
+                locationGraph.addEdge(toVertex, fromVertex, edgeLength)
+
+                print("\Connection Added!")
+            # endregion
+            # region TASK3 - delete location
             elif userCommand == "dl":
-                ...
+                locationLbl = str(input("\nPlease enter a location: "))
+                locationGraph.deleteVertex(locationLbl)
+            # endregion
+            # region TASK3 - delete connection
+            elif userCommand == "dc":
+                fromLbl = str(input("\nPlease enter the first location of the connection: "))
+                toLbl = str(input("\nPlease enter the second location of the connection: "))
+                locationGraph.deleteEdge(toLbl, fromLbl)
             # endregion
             # region TASK3 - search operation
             elif userCommand == "sl":
+                dfsOrbfs = str(input("\nWould you like to search the entire map or between 2 locations? (entire/between): "))
                 # 2 DFS explore entire graph
+                if dfsOrbfs == "entire":
+                    startLbl = str(input("\nPlease enter the starting location: "))
+                    locationGraph.depthFirstSearch(startLbl)
                 # 2 BFS explore shortest path
-                ...
+                elif dfsOrbfs == "between":
+                    startLbl = str(input("\nPlease enter the starting location: "))
+                    endLbl = str(input("\nPlease enter the end location: "))
+                    locationGraph.breadthFirstSearch(startLbl)
+                else:
+                    print("Incorrect search method please enter either 'entire' or 'between'")
             # endregion
             # region TASK6 - UAV itinerary
             elif userCommand == "it":

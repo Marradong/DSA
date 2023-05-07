@@ -35,9 +35,8 @@ class DSAGraphVertex():
     def getAdjacent(self):
         return self._links
     
-    def addEdge(self, vertex, value=None):
-        newEdge = DSAGraphEdge(vertex, self, value)
-        self._links.insertLast(newEdge)
+    def addEdge(self, vertex):
+        self._links.insertLast(vertex)
         return
     
     def setVisited(self):
@@ -65,8 +64,17 @@ class DSAGraph():
         if not self.hasVertex(label):
             newVertex = DSAGraphVertex(label, value)
             self.vertices.insertLast(newVertex)
-        else:
-            print("Vertex already exists")
+        return
+    
+
+    def deleteVertex(self, delLabel):
+        vertexToDelete = self.getVertex(delLabel)
+        for node in self.vertices:
+            if (node.getValue() == vertexToDelete):
+                self.vertices.remove(node.getValue())
+        
+        for linkNode in vertexToDelete.getAdjacent():
+            self.deleteEdge(vertexToDelete.getLabel(), linkNode.getValue().getLabel())
         return
     
     def addEdge(self, label1, label2, value=None):
@@ -75,13 +83,33 @@ class DSAGraph():
         if (vertex1 == None) or (vertex2 == None):
             print("One vertex does not exist ")
         else:
-            vertex1.addEdge(vertex2, value)
-            vertex2.addEdge(vertex1, value)
+            vertex1.addEdge(vertex2)
+            vertex2.addEdge(vertex1)
             newEdge = DSAGraphEdge(vertex1, vertex2, value)
             self.edges.insertLast(newEdge)
         return
+    
+    def deleteEdge(self, toLabel, fromLabel):
+        toVertex = self.getVertex(toLabel)
+        fromVertex = self.getVertex(fromLabel)
+        # Remove link between vertices
+        for toNode in toVertex.getAdjacent():
+            if toNode.getValue() == fromVertex:
+                toVertex.getAdjacent().remove(toNode.getValue())
+        
+        for fromNode in fromVertex.getAdjacent():
+            if fromNode.getValue() == toVertex:
+                fromNode.getAdjacent().remove(fromNode.getValue())
+        
+        # Remove from Edge list
+        for edgeNode in self.edges:
+            if (edgeNode.getValue().getTo() == toVertex) and (edgeNode.getValue().getFrom() == fromVertex):
+                self.edges.remove(edgeNode.getValue())
+            elif (edgeNode.getValue().getTo() == fromVertex) and (edgeNode.getValue().getFrom() == toVertex):
+                self.edges.remove(edgeNode.getValue())
+        return
 
-
+        
     def hasVertex(self, label):
         vertexFound = False
         for node in self.vertices:
@@ -158,12 +186,16 @@ class DSAGraph():
         print("")
 
 
-    def breadthFirstSearch(self):
+    def breadthFirstSearch(self, label):
         T = sq.DSAQueue()
         Q = sq.DSAQueue()
         for node in self.vertices:
             node.getValue().clearVisited()
-        v = self.vertices.peekFirst().getValue()
+        for vertex in self.vertices:
+            if vertex.getValue().getLabel() == label:
+                v = vertex.getValue()
+            else:
+                raise ValueError("Starting vertex does not exist")
         v.setVisited()
         Q.enqueue(v)
         while not Q.isEmpty():
@@ -178,12 +210,16 @@ class DSAGraph():
         while not T.isEmpty():
             print(T.dequeue())
 
-    def depthFirstSearch(self):
+    def depthFirstSearch(self, label):
         T = sq.DSAQueue()
         S = sq.DSAStack()
         for node in self.vertices:
             node.getValue().clearVisited()
-        v = self.vertices.peekFirst().getValue()
+        for vertex in self.vertices:
+            if vertex.getValue().getLabel() == label:
+                v = vertex.getValue()
+            else:
+                raise ValueError("Starting vertex does not exist")
         v.setVisited()
         S.push(v)
         while not S.isEmpty():
