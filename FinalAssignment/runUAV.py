@@ -171,7 +171,6 @@ def __main__():
                     startLbl = str(input("\nPlease enter the starting location: "))
                     endLbl = str(input("\nPlease enter the end location: "))
                     shortestPath = locationGraph.breadthFirstSearch(startLbl, endLbl)
-                    print("Shortest Path between: ", startLbl, " and ", endLbl, ": ", shortestPath)
                 else:
                     print("Incorrect search method please enter either 'entire' or 'between'")
             # endregion

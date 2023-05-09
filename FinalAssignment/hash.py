@@ -60,7 +60,7 @@ class DSADoubleHashTable():
                 if (hashIdx == origIdx):
                     giveUp = True
         if not found:
-            raise Exception("Key not found")
+            raise ValueError("Key not found")
         else:
             return self._hashArray[hashIdx]._value
         
@@ -107,10 +107,10 @@ class DSADoubleHashTable():
     
     def resize(self):
         if self.getLoadFactor() < self._lfLower:
-            print("\nLoad factor <", self._lfLower, ": ", self.getLoadFactor(), " Resizing\n")
+            # print("\nLoad factor <", self._lfLower, ": ", self.getLoadFactor(), " Resizing\n")
             actualSize = self.findNextPrime(len(self._hashArray)//2)
         else:
-            print("\nLoad factor >", self._lfUpper, ": ", self.getLoadFactor(), " Resizing\n")
+            # print("\nLoad factor >", self._lfUpper, ": ", self.getLoadFactor(), " Resizing\n")
             actualSize = self.findNextPrime(len(self._hashArray)*2)
 
         oldArray = self._hashArray

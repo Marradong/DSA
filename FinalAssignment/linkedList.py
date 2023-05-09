@@ -65,7 +65,7 @@ class DSADoublyLinkedList:
 
     def insertLast(self, newValue):
         newNode = DSADoublyListNode(newValue)
-        self._count = self._count - 1
+        self._count = self._count + 1
         if self.isEmpty():
             self._head = newNode
             self._tail = newNode

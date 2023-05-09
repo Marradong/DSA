@@ -1,6 +1,6 @@
 import linkedList as LL
 import stackQueue as sq
-import numpy as np
+import hash
 
 
 class DSAGraphEdge():
@@ -187,36 +187,6 @@ class DSAGraph():
             print("")
         print("")
 
-
-    def breadthFirstSearch(self, startLabel, endLabel):
-        shortestPath = ""
-        endFound = False
-        T = sq.DSAQueue()
-        Q = sq.DSAQueue()
-        for node in self.vertices:
-            node.getValue().clearVisited()
-        for vertex in self.vertices:
-            if vertex.getValue().getLabel() == startLabel:
-                v = vertex.getValue()
-        if v == None:
-            raise ValueError("Starting vertex does not exist")
-        v.setVisited()
-        Q.enqueue(v)
-        while not Q.isEmpty() and not endFound:
-            v = Q.dequeue()
-            shortestPath = shortestPath + str(v.getLabel()) + ", "
-            for w in v.getAdjacent():
-                if w.getValue().getVisited() == False:
-                    T.enqueue(v.getLabel())
-                    T.enqueue(w.getValue().getLabel())
-                    w.getValue().setVisited()
-                    Q.enqueue(w.getValue())
-                    if w.getValue().getLabel() == endLabel:
-                        shortestPath = shortestPath + str(w.getValue().getLabel())
-                        endFound = True
-        if not endFound:
-            shortestPath = "No path exists between input locations"
-        return shortestPath
     
     def depthFirstSearch(self, label):
         T = sq.DSAQueue()
@@ -254,20 +224,47 @@ class DSAGraph():
         for vertex in self.vertices:
             if vertex.getValue().getLabel() == startLabel:
                 v = vertex.getValue()
-        if v == None:
-            raise ValueError("Starting vertex does not exist")
         
-        v.setVisited()
-        Q.enqueue(v)
+        try:
+            v.setVisited()
+            Q.enqueue(v)
+            prevVertices = hash.DSADoubleHashTable(self.vertices._count)
+            i = 0
+            while not Q.isEmpty():
+                v = Q.dequeue()
+                i == i + 1
+                for w in v.getAdjacent():
+                    if w.getValue().getVisited() == False:
+                        w.getValue().setVisited()
+                        Q.enqueue(w.getValue())
+                        prevVertices.put(w.getValue().getLabel(), v.getLabel())
+        except UnboundLocalError: 
+            print("Starting location does not exist")
+            prevVertices = -1
+        return prevVertices        
+    
+    def buildPath(self, startLabel, endLabel, prevVertices: hash.DSADoubleHashTable):
+        endBuild = False
+        shortestPath = str(endLabel)
+        prevVertex = endLabel
+        while not endBuild:
+            try:
+                prevVertex = prevVertices.get(prevVertex)
+                shortestPath = str(prevVertex) + ", " + shortestPath
+            except ValueError:
+                endBuild = True
+        if shortestPath == endLabel:
+            shortestPath = "End location not found"
+        elif shortestPath[0] != startLabel:
+            shortestPath = "No path found"
 
-        prevVertices = np.empty(self.vertices._count)
-        i = 0
-        while not Q.isEmpty():
-            v = Q.dequeue()
-            i == i + 1
-            for w in v.getAdjacent():
-                if w.getValue().getVisited() == False:
-                    w.getValue().setVisited()
-                    Q.enqueue(w.getValue())
-                    prevVertices[i] = str(w.getValue().getLabel()) + ":" + str(v.getLabel())
-        return prevVertices
+        return shortestPath
+    
+    def breadthFirstSearch(self, startLabel, endLabel):
+        prevVertices = self.doBFS(startLabel)
+        if prevVertices != -1:
+            shortestPath = self.buildPath(startLabel, endLabel, prevVertices)
+            print("Shortest Path between: ", startLabel, " and ", endLabel, ": ", shortestPath)
+        return
+            
+
