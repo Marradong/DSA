@@ -132,7 +132,7 @@ def __main__():
                 edgeLength = str(input("\nPlease enter the distance between locations: "))
                 locationGraph.addEdge(newLocLbl, edgeVertex, edgeLength)
 
-                print("\Connection Added!")
+                print("\nConnection Added!")
 
                 addAnotherEdge = str(input("\nWould you like to add another connection? (Yes/No): "))
                 while addAnotherEdge == "Yes":
@@ -148,18 +148,13 @@ def __main__():
                 edgeLength = str(input("\nPlease enter the distance between locations: "))
                 locationGraph.addEdge(toVertex, fromVertex, edgeLength)
 
-                print("\Connection Added!")
+                print("\nConnection Added!")
             # endregion
             # region TASK3 - delete location
             elif userCommand == "dl":
-                locationLbl = str(input("\nPlease enter a location: "))
+                locationLbl = str(input("\nPlease enter a location to delete: "))
                 locationGraph.deleteVertex(locationLbl)
-            # endregion
-            # region TASK3 - delete connection
-            elif userCommand == "dc":
-                fromLbl = str(input("\nPlease enter the first location of the connection: "))
-                toLbl = str(input("\nPlease enter the second location of the connection: "))
-                locationGraph.deleteEdge(toLbl, fromLbl)
+                uavData.remove(str(ord(locationLbl)))
             # endregion
             # region TASK3 - search operation
             elif userCommand == "sl":
@@ -167,12 +162,16 @@ def __main__():
                 # 2 DFS explore entire graph
                 if dfsOrbfs == "entire":
                     startLbl = str(input("\nPlease enter the starting location: "))
-                    locationGraph.depthFirstSearch(startLbl)
+                    try:
+                        locationGraph.depthFirstSearch(startLbl)
+                    except ValueError:
+                        print("Starting location does not exist")
                 # 2 BFS explore shortest path
                 elif dfsOrbfs == "between":
                     startLbl = str(input("\nPlease enter the starting location: "))
                     endLbl = str(input("\nPlease enter the end location: "))
-                    locationGraph.breadthFirstSearch(startLbl)
+                    shortestPath = locationGraph.breadthFirstSearch(startLbl, endLbl)
+                    print("Shortest Path between: ", startLbl, " and ", endLbl, ": ", shortestPath)
                 else:
                     print("Incorrect search method please enter either 'entire' or 'between'")
             # endregion
@@ -180,6 +179,8 @@ def __main__():
             elif userCommand == "it":
                 ...
             # endregion
+            elif userCommand == "cm":
+                print("Closing Menu")
             else:
                 print("Invalid command please see list below")
                 printCommands()

@@ -1,5 +1,6 @@
 import linkedList as LL
 import stackQueue as sq
+import numpy as np
 
 
 class DSAGraphEdge():
@@ -69,12 +70,11 @@ class DSAGraph():
 
     def deleteVertex(self, delLabel):
         vertexToDelete = self.getVertex(delLabel)
-        for node in self.vertices:
-            if (node.getValue() == vertexToDelete):
-                self.vertices.remove(node.getValue())
         
         for linkNode in vertexToDelete.getAdjacent():
             self.deleteEdge(vertexToDelete.getLabel(), linkNode.getValue().getLabel())
+
+        self.vertices.remove(vertexToDelete.getValue())
         return
     
     def addEdge(self, label1, label2, value=None):
@@ -92,21 +92,23 @@ class DSAGraph():
     def deleteEdge(self, toLabel, fromLabel):
         toVertex = self.getVertex(toLabel)
         fromVertex = self.getVertex(fromLabel)
+
         # Remove link between vertices
-        for toNode in toVertex.getAdjacent():
-            if toNode.getValue() == fromVertex:
-                toVertex.getAdjacent().remove(toNode.getValue())
-        
-        for fromNode in fromVertex.getAdjacent():
-            if fromNode.getValue() == toVertex:
-                fromNode.getAdjacent().remove(fromNode.getValue())
+        if toVertex != None and fromVertex != None:
+            for toNode in toVertex.getAdjacent():
+                if toNode.getValue().getValue() == fromVertex.getValue():
+                    toNode.getValue().getAdjacent().remove(toVertex.getValue())
+            
+            for fromNode in fromVertex.getAdjacent():
+                if fromNode.getValue().getValue() == toVertex.getValue():
+                    fromNode.getValue().getAdjacent().remove(fromVertex.getValue())
         
         # Remove from Edge list
-        for edgeNode in self.edges:
-            if (edgeNode.getValue().getTo() == toVertex) and (edgeNode.getValue().getFrom() == fromVertex):
-                self.edges.remove(edgeNode.getValue())
-            elif (edgeNode.getValue().getTo() == fromVertex) and (edgeNode.getValue().getFrom() == toVertex):
-                self.edges.remove(edgeNode.getValue())
+            for edgeNode in self.edges:
+                if (edgeNode.getValue().getTo() == toVertex) and (edgeNode.getValue().getFrom() == fromVertex):
+                    self.edges.remove(edgeNode.getValue())
+                elif (edgeNode.getValue().getTo() == fromVertex) and (edgeNode.getValue().getFrom() == toVertex):
+                    self.edges.remove(edgeNode.getValue())
         return
 
         
@@ -186,40 +188,47 @@ class DSAGraph():
         print("")
 
 
-    def breadthFirstSearch(self, label):
+    def breadthFirstSearch(self, startLabel, endLabel):
+        shortestPath = ""
+        endFound = False
         T = sq.DSAQueue()
         Q = sq.DSAQueue()
         for node in self.vertices:
             node.getValue().clearVisited()
         for vertex in self.vertices:
-            if vertex.getValue().getLabel() == label:
+            if vertex.getValue().getLabel() == startLabel:
                 v = vertex.getValue()
-            else:
-                raise ValueError("Starting vertex does not exist")
+        if v == None:
+            raise ValueError("Starting vertex does not exist")
         v.setVisited()
         Q.enqueue(v)
-        while not Q.isEmpty():
+        while not Q.isEmpty() and not endFound:
             v = Q.dequeue()
+            shortestPath = shortestPath + str(v.getLabel()) + ", "
             for w in v.getAdjacent():
                 if w.getValue().getVisited() == False:
                     T.enqueue(v.getLabel())
                     T.enqueue(w.getValue().getLabel())
                     w.getValue().setVisited()
                     Q.enqueue(w.getValue())
-        print("\nBreadth First Search:")
-        while not T.isEmpty():
-            print(T.dequeue())
-
+                    if w.getValue().getLabel() == endLabel:
+                        shortestPath = shortestPath + str(w.getValue().getLabel())
+                        endFound = True
+        if not endFound:
+            shortestPath = "No path exists between input locations"
+        return shortestPath
+    
     def depthFirstSearch(self, label):
         T = sq.DSAQueue()
         S = sq.DSAStack()
         for node in self.vertices:
             node.getValue().clearVisited()
+
         for vertex in self.vertices:
             if vertex.getValue().getLabel() == label:
                 v = vertex.getValue()
-            else:
-                raise ValueError("Starting vertex does not exist")
+        if v == None:
+            raise ValueError("Starting vertex does not exist")
         v.setVisited()
         S.push(v)
         while not S.isEmpty():
@@ -234,3 +243,31 @@ class DSAGraph():
         print("\nDepth First Search:")
         while not T.isEmpty():
             print(T.dequeue())
+
+
+    def doBFS(self, startLabel):
+        Q = sq.DSAQueue()
+
+        for node in self.vertices:
+            node.getValue().clearVisited()
+
+        for vertex in self.vertices:
+            if vertex.getValue().getLabel() == startLabel:
+                v = vertex.getValue()
+        if v == None:
+            raise ValueError("Starting vertex does not exist")
+        
+        v.setVisited()
+        Q.enqueue(v)
+
+        prevVertices = np.empty(self.vertices._count)
+        i = 0
+        while not Q.isEmpty():
+            v = Q.dequeue()
+            i == i + 1
+            for w in v.getAdjacent():
+                if w.getValue().getVisited() == False:
+                    w.getValue().setVisited()
+                    Q.enqueue(w.getValue())
+                    prevVertices[i] = str(w.getValue().getLabel()) + ":" + str(v.getLabel())
+        return prevVertices

@@ -37,6 +37,7 @@ class DSADoublyLinkedList:
     def __init__(self):
         self._head = None
         self._tail = None
+        self._count = 0
 
 
     def isEmpty(self):
@@ -52,6 +53,7 @@ class DSADoublyLinkedList:
 
     def insertFirst(self, newValue):
         newNode = DSADoublyListNode(newValue)
+        self._count = self._count + 1
         if self.isEmpty():
             self._head = newNode
             self._tail = newNode
@@ -63,6 +65,7 @@ class DSADoublyLinkedList:
 
     def insertLast(self, newValue):
         newNode = DSADoublyListNode(newValue)
+        self._count = self._count - 1
         if self.isEmpty():
             self._head = newNode
             self._tail = newNode
@@ -85,6 +88,7 @@ class DSADoublyLinkedList:
     
     def removeFirst(self):
         if not self.isEmpty():
+            self._count = self._count - 1
             if self._head.getNext() == None:
                 nodeValue = self._head.getValue()
                 self._head = None
@@ -98,6 +102,7 @@ class DSADoublyLinkedList:
 
     def removeLast(self):
         if not self.isEmpty():
+            self._count = self._count - 1
             if self._tail.getPrev() == None:
                 nodeValue = self._tail.getValue()
                 self._tail = None
@@ -110,16 +115,18 @@ class DSADoublyLinkedList:
         
     def remove(self, value):
         curr = self._head
-        while curr and (curr.getValue() != value):
+        while curr and (curr.getValue().getValue() != value):
             curr = curr.getNext()
         
         if not curr:
-            print("Node with value: ", value, " does not exist")
+            # do nothing
+            ...
         elif curr == self._head:
             self.removeFirst()
         elif curr == self._tail:
             self.removeLast()
         else:
+            self._count = self._count - 1
             prev = curr.getPrev()
             next = curr.getNext()
             prev.setNext(next)
