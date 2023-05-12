@@ -210,9 +210,7 @@ class DSAGraph():
                     S.push(w.getValue())
                     v = w.getValue()
             v = S.pop()
-        print("\nDepth First Search:")
-        while not T.isEmpty():
-            print(T.dequeue())
+        return T
 
 
     def doBFS(self, startLabel):
@@ -250,7 +248,7 @@ class DSAGraph():
         while not endBuild:
             try:
                 prevVertex = prevVertices.get(prevVertex)
-                shortestPath = str(prevVertex) + ", " + shortestPath
+                shortestPath = str(prevVertex) + "->" + shortestPath
             except ValueError:
                 endBuild = True
         if shortestPath == endLabel:

@@ -156,6 +156,13 @@ def __main__():
                 locationGraph.deleteVertex(locationLbl)
                 uavData.remove(str(ord(locationLbl)))
             # endregion
+            # region TASK3 - delete connection
+            elif userCommand == "dc":
+                fromLabel = str(input("\nPlease enter the first location of connection: "))
+                toLabel = str(input("\nPlease enter the second location of connection: "))
+                locationGraph.deleteEdge(toLabel, fromLabel)
+                locationGraph.deleteEdge(fromLabel, toLabel)
+            # endregion
             # region TASK3 - search operation
             elif userCommand == "sl":
                 dfsOrbfs = str(input("\nWould you like to search the entire map or between 2 locations? (entire/between): "))
@@ -163,7 +170,7 @@ def __main__():
                 if dfsOrbfs == "entire":
                     startLbl = str(input("\nPlease enter the starting location: "))
                     try:
-                        locationGraph.depthFirstSearch(startLbl)
+                        graphQueue = locationGraph.depthFirstSearch(startLbl)
                     except ValueError:
                         print("Starting location does not exist")
                 # 2 BFS explore shortest path
