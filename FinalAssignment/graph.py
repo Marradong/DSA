@@ -187,29 +187,37 @@ class DSAGraph():
         print("")
 
     
-    def depthFirstSearch(self, label):
+    def depthFirstSearch(self, startLabel):
         T = sq.DSAQueue()
         S = sq.DSAStack()
         for node in self.vertices:
             node.getValue().clearVisited()
 
         for vertex in self.vertices:
-            if vertex.getValue().getLabel() == label:
+            if vertex.getValue().getLabel() == startLabel:
                 v = vertex.getValue()
-        if v == None:
-            raise ValueError("Starting vertex does not exist")
-        v.setVisited()
-        S.push(v)
-        while not S.isEmpty():
-            for w in v.getAdjacent():
-                if w.getValue().getVisited() == False:
-                    T.enqueue(v.getLabel())
-                    T.enqueue(w.getValue().getLabel())
-                    w.getValue().setVisited()
-                    S.push(w.getValue())
-                    v = w.getValue()
-            v = S.pop()
-        return T
+        try:
+            v.setVisited()
+            S.push(v)
+            while not S.isEmpty():
+                for w in v.getAdjacent():
+                    if w.getValue().getVisited() == False:
+                        T.enqueue(v.getLabel())
+                        T.enqueue(w.getValue().getLabel())
+                        w.getValue().setVisited()
+                        S.push(w.getValue())
+                        v = w.getValue()
+                v = S.pop()
+            path = ""
+            for item in T:
+                path = path + "->" + str(T.dequeue())
+            path = path.lstrip("->")
+            print("Path starting at: ", startLabel, ": ", path)
+        except UnboundLocalError:
+           path = "Starting vertex does not exist"
+
+            
+        return path
 
 
     def doBFS(self, startLabel):
@@ -262,6 +270,8 @@ class DSAGraph():
         if prevVertices != -1:
             shortestPath = self.buildPath(startLabel, endLabel, prevVertices)
             print("Shortest Path between: ", startLabel, " and ", endLabel, ": ", shortestPath)
+        else:
+            shortestPath = "No path found"
         return shortestPath
             
 

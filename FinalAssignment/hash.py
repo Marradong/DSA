@@ -166,8 +166,6 @@ class DSADoubleHashTable():
         return nextPrime
 
 
-class DSALinearHashTable():
-
     def __init__(self, tableSize):
         self._lfUpper = 0.6
         self._lfLower = 0.2
