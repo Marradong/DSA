@@ -98,11 +98,8 @@ class DSAGraph():
             for toNode in toVertex.getAdjacent():
                 if toNode.getValue().getValue() == fromVertex.getValue():
                     toNode.getValue().getAdjacent().remove(toVertex.getValue())
+                    toVertex.getAdjacent().remove(toNode.getValue().getValue())
             
-            for fromNode in fromVertex.getAdjacent():
-                if fromNode.getValue().getValue() == toVertex.getValue():
-                    fromNode.getValue().getAdjacent().remove(fromVertex.getValue())
-        
         # Remove from Edge list
             for edgeNode in self.edges:
                 if (edgeNode.getValue().getTo() == toVertex) and (edgeNode.getValue().getFrom() == fromVertex):
