@@ -85,8 +85,10 @@ class DSAGraph():
         else:
             vertex1.addEdge(vertex2)
             vertex2.addEdge(vertex1)
-            newEdge = DSAGraphEdge(vertex1, vertex2, value)
-            self.edges.insertLast(newEdge)
+            new1Edge = DSAGraphEdge(vertex1, vertex2, value)
+            self.edges.insertLast(new1Edge)
+            new2Edge = DSAGraphEdge(vertex2, vertex1, value)
+            self.edges.insertLast(new2Edge)
         return
     
     def deleteEdge(self, toLabel, fromLabel):
@@ -260,6 +262,6 @@ class DSAGraph():
         if prevVertices != -1:
             shortestPath = self.buildPath(startLabel, endLabel, prevVertices)
             print("Shortest Path between: ", startLabel, " and ", endLabel, ": ", shortestPath)
-        return
+        return shortestPath
             
 

@@ -27,6 +27,8 @@ def printCommands():
     print("           it - Provide Itinerary")
     print("           cm - Close Menu")
 
+def createKey(lbl):
+    return str(ord(lbl))
 
 def getRisk(temperature, humidity, windSpeed):
     if (humidity < 0):
@@ -61,6 +63,19 @@ def _getRisk(temperature, humidity, windSpeed):
         wIDX = 2
     
     return risk_matrix[tIDX][hIDX][wIDX]
+
+def loadLocations(fileName):
+    with open(fileName, "r") as locationFile:
+        graphDimensions = locationFile.readline().split()
+        numVerticies = graphDimensions[0]
+        numEdges = int(graphDimensions[1])
+        locationGraph = graph.DSAGraph() 
+        for i in range(numEdges):
+            newEdge = locationFile.readline().strip("\n").split()
+            locationGraph.addVertex(newEdge[0], newEdge[0])
+            locationGraph.addVertex(newEdge[1], newEdge[1])
+            locationGraph.addEdge(newEdge[0],newEdge[1], newEdge[2])
+    return locationGraph
 # endregion
 
 # region Main Method
@@ -82,6 +97,7 @@ def __main__():
                 locationGraph.addVertex(newEdge[0], newEdge[0])
                 locationGraph.addVertex(newEdge[1], newEdge[1])
                 locationGraph.addEdge(newEdge[0],newEdge[1], newEdge[2])
+            locationFile.close()
         except IOError as e:
             print(e)
         # endregion
@@ -96,9 +112,8 @@ def __main__():
                 temperature = locationData.split()[1]
                 humidity = locationData.split()[2]
                 windSpeed = locationData.split()[3]
-                key = ord(vertex)
                 value = str(temperature) + "," + str(humidity) + "," + str(windSpeed)
-                uavData.put(str(key), value)
+                uavData.put(createKey(vertex), value)
                 locationData = dataFile.readline()
         except IOError as e:
             print(e)
@@ -124,7 +139,7 @@ def __main__():
                 humidity  = str(input("\nPlease enter the humidity: "))
                 windSpeed  = str(input("\nPlease enter the wind : "))
                 value = str(temperature) + "," + str(humidity) + "," + str(windSpeed)
-                uavData.put(newLocLbl, value)
+                uavData.put(createKey(newLocLbl), value)
 
                 print("\nLocation Added!")
 
@@ -154,7 +169,7 @@ def __main__():
             elif userCommand == "dl":
                 locationLbl = str(input("\nPlease enter a location to delete: "))
                 locationGraph.deleteVertex(locationLbl)
-                uavData.remove(str(ord(locationLbl)))
+                uavData.remove(createKey(locationLbl))
             # endregion
             # region TASK3 - delete connection
             elif userCommand == "dc":
@@ -171,6 +186,11 @@ def __main__():
                     startLbl = str(input("\nPlease enter the starting location: "))
                     try:
                         graphQueue = locationGraph.depthFirstSearch(startLbl)
+                        path = ""
+                        for item in graphQueue:
+                            path = path + "->" + str(graphQueue.dequeue())
+                        path = path.lstrip("->")
+                        print(path)
                     except ValueError:
                         print("Starting location does not exist")
                 # 2 BFS explore shortest path
@@ -178,6 +198,11 @@ def __main__():
                     startLbl = str(input("\nPlease enter the starting location: "))
                     endLbl = str(input("\nPlease enter the end location: "))
                     shortestPath = locationGraph.breadthFirstSearch(startLbl, endLbl)
+                    locations = shortestPath.split("->")
+                    print("Location data")
+                    for i in range(len(locations)):
+                        print(locations[i], ": ", uavData.get(str(ord(locations[i]))))
+
                 else:
                     print("Incorrect search method please enter either 'entire' or 'between'")
             # endregion
