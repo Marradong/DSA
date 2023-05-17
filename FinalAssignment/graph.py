@@ -1,6 +1,7 @@
 import linkedList as LL
 import stackQueue as sq
 import hash
+import sys
 
 
 class DSAGraphEdge():
@@ -14,10 +15,10 @@ class DSAGraphEdge():
         return self._value
 
     def getTo(self):
-        return self._value
+        return self._to
     
     def getFrom(self):
-        return self._value
+        return self._from
 
 class DSAGraphVertex():
 
@@ -26,6 +27,22 @@ class DSAGraphVertex():
         self._value = inValue
         self._links = LL.DSADoublyLinkedList()
         self._visited = False
+        self._distance = sys.maxsize
+        self._prev = None
+
+    def getDist(self):
+        return self._distance
+    
+    def getPrev(self):
+        return self._prev
+
+    def setDist(self, dist):
+        self._distance = dist
+        return
+    
+    def setPrev(self, prev):
+        self._prev = prev
+        return 
 
     def getLabel(self):
         return self._label
@@ -139,6 +156,18 @@ class DSAGraph():
                 gotVertex = vertex
         return gotVertex
     
+    def getEdge(self, fromLabel, toLabel):
+        gotEdge = None
+        fromVertex = self.getVertex(fromLabel)
+        toVertex = self.getVertex(toLabel)
+        for node in self.edges:
+            edge = node.getValue()
+            if edge.getTo().getValue() == toVertex.getValue() and edge.getFrom().getValue() == fromVertex.getValue():
+                gotEdge = edge.getValue()
+            elif edge.getTo() == fromVertex and edge.getFrom() == toVertex:
+                gotEdge = edge.getValue()
+        return gotEdge
+
     def getAdjacent(self, label):
         vertexList = None
         for node in self.vertices:
@@ -274,4 +303,64 @@ class DSAGraph():
             shortestPath = "No path found"
         return shortestPath
             
+    def dijkstraSearch(self, startLabel):
+        Q = sq.DSAQueue()
+        for node in self.vertices:
+            node.getValue().clearVisited()
+            node.getValue().setDist(sys.maxsize)
+            node.getValue().setPrev(None)
+
+        for vertex in self.vertices:
+            if vertex.getValue().getLabel() == startLabel:
+                v = vertex.getValue()
+        
+        isError = False
+
+        try:
+            v.setDist(0)
+            Q.enqueue(v)
+            while not Q.isEmpty():
+                v = Q.dequeue()
+                if v.getVisited() == False:
+                    v.setVisited()
+                    for w in v.getAdjacent():
+                        newVertex = w.getValue()
+                        if newVertex.getVisited() == False:
+                            distance = float(v.getDist()) + float(self.getEdge(v.getLabel(), newVertex.getLabel()))
+                            if distance < newVertex.getDist():
+                                newVertex.setDist(distance)
+                                newVertex.setPrev(v)
+                                Q.enqueue(newVertex)
+        except UnboundLocalError: 
+            print("Starting location does not exist")
+            isError = True
+        return isError
+    
+    def doDijSearch(self, startLabel, endLabel):
+        noStart = self.dijkstraSearch(startLabel)
+        endVertex = self.getVertex(endLabel)
+        if noStart:
+            path = "Starting location does not exist"
+        elif endVertex == None:
+            path = "End location not found"
+        else:
+            endBuild = False
+            path = str(endVertex.getLabel())
+
+            for node in self.vertices:
+                node.getValue().clearVisited()
+            endVertex.setVisited()
+            prevVertex = endVertex.getPrev()
+            while prevVertex != None and prevVertex.getVisited() == False:
+                prevVertex.setVisited()
+                if prevVertex.getLabel() == startLabel:
+                    path = str(startLabel) + '->' + path
+                    endBuild = True
+                else:
+                    path = str(prevVertex.getLabel()) + '->' + path
+                    prevVertex = prevVertex.getPrev()
+            if not endBuild:
+                path = "No path found"
+            print("Shortest Path: ", path, f" Distance: {endVertex.getDist(): .2f}")
+        return path
 

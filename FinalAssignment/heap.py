@@ -57,7 +57,13 @@ class DSAHeap():
                 found = True
         return found
             
-    
+    def peekPriority(self):
+        root = self._heap[0]
+        priority = -1
+        if root != None:
+            priority = root.getPriority()
+        return priority
+        
 
     def display(self):
         print("\n---Top of Heap---")

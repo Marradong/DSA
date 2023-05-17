@@ -105,7 +105,30 @@ def getData(uavData, riskHeap, path):
 # endregion
 
 def runMenu(locationGraph, uavData, userCommand):
-    while (userCommand != "cm"):
+    ...
+
+
+# region Main Method
+
+def __main__():
+    if len(sys.argv) != 3:
+        usage()
+    else:
+        
+        lfileName = sys.argv[LocFileIDX]
+        dfileName = sys.argv[DataFileIDX]
+        try:
+            # region TASK1 - Location From File
+            locationGraph = loadLocations(lfileName)
+            # endregion
+            # region TASK4 - Data From File
+            uavData = loadData(dfileName)
+            # endregion
+            riskheap = heap.DSAHeap()
+            # region Menu
+            printCommands()
+            userCommand = ""
+            while (userCommand != "cm"):
                 userCommand = str(input("\nPlease enter a valid command: "))
 
                 # region TASK1 - display adjacency list
@@ -182,12 +205,30 @@ def runMenu(locationGraph, uavData, userCommand):
                         shortestPath = locationGraph.breadthFirstSearch(startLbl, endLbl)
                         if shortestPath != "No path found" and shortestPath != "End location not found" and shortestPath != "Starting location does not exist":
                             riskheap = getData(uavData, riskheap, shortestPath)
+                        print("\nDijkstra")
+                        path = locationGraph.doDijSearch(startLbl, endLbl)
+                        if path != "No path found" and path != "End location not found" and path != "Starting location does not exist":
+                            riskheap = getData(uavData, riskheap, path)
 
                     else:
                         print("Incorrect search method please enter either 'entire' or 'between'")
                 # endregion
                 # region TASK6 - UAV itinerary
                 elif userCommand == "it":
+                    # Itinerary Process:
+
+                    # Assuming Risk heap is implemented correctly:
+
+                    # 1. get items from heap of highest risk level
+                    # possible way:
+                    # a. remove all items and add them to an array
+                    # b. put the items back in the heap
+
+                    # 2. get distance and path between all verticies of that risk level - fully connected graph
+                    # for i in range(len(highArr))
+
+                    # for i in 
+                    # 3. nearest neighbour to get the shortest path
                     ...
                 # endregion
                 elif userCommand == "cm":
@@ -195,29 +236,6 @@ def runMenu(locationGraph, uavData, userCommand):
                 else:
                     print("Invalid command please see list below")
                     printCommands()
-
-
-# region Main Method
-
-def __main__():
-    if len(sys.argv) != 3:
-        usage()
-    else:
-        
-        lfileName = sys.argv[LocFileIDX]
-        dfileName = sys.argv[DataFileIDX]
-        try:
-            # region TASK1 - Location From File
-            locationGraph = loadLocations(lfileName)
-            # endregion
-            # region TASK4 - Data From File
-            uavData = loadData(dfileName)
-            # endregion
-            riskheap = heap.DSAHeap()
-            # region Menu
-            printCommands()
-            userCommand = ""
-            runMenu(locationGraph, uavData)
             # endregion
         except IOError as e:
             print("Error loading file: ", e)
