@@ -225,27 +225,22 @@ class DSAGraph():
         for vertex in self.vertices:
             if vertex.getValue().getLabel() == startLabel:
                 v = vertex.getValue()
-        try:
-            v.setVisited()
-            S.push(v)
-            while not S.isEmpty():
-                for w in v.getAdjacent():
-                    if w.getValue().getVisited() == False:
-                        T.enqueue(v.getLabel())
-                        T.enqueue(w.getValue().getLabel())
-                        w.getValue().setVisited()
-                        S.push(w.getValue())
-                        v = w.getValue()
-                v = S.pop()
-            path = ""
-            for item in T:
-                path = path + "->" + str(T.dequeue())
-            path = path.lstrip("->")
-            print("Path starting at: ", startLabel, ": ", path)
-        except UnboundLocalError:
-           path = "Starting vertex does not exist"
-
-            
+        
+        v.setVisited()
+        S.push(v)
+        while not S.isEmpty():
+            for w in v.getAdjacent():
+                if w.getValue().getVisited() == False:
+                    T.enqueue(v.getLabel())
+                    T.enqueue(w.getValue().getLabel())
+                    w.getValue().setVisited()
+                    S.push(w.getValue())
+                    v = w.getValue()
+            v = S.pop()
+        path = ""
+        for item in T:
+            path = path + "->" + str(T.dequeue())
+        path = path.lstrip("->")   
         return path
 
 
@@ -259,22 +254,18 @@ class DSAGraph():
             if vertex.getValue().getLabel() == startLabel:
                 v = vertex.getValue()
         
-        try:
-            v.setVisited()
-            Q.enqueue(v)
-            prevVertices = hash.DSADoubleHashTable(self.vertices._count)
-            i = 0
-            while not Q.isEmpty():
-                v = Q.dequeue()
-                i == i + 1
-                for w in v.getAdjacent():
-                    if w.getValue().getVisited() == False:
-                        w.getValue().setVisited()
-                        Q.enqueue(w.getValue())
-                        prevVertices.put(w.getValue().getLabel(), v.getLabel())
-        except UnboundLocalError: 
-            print("Starting location does not exist")
-            prevVertices = -1
+        v.setVisited()
+        Q.enqueue(v)
+        prevVertices = hash.DSADoubleHashTable(self.vertices._count)
+        i = 0
+        while not Q.isEmpty():
+            v = Q.dequeue()
+            i == i + 1
+            for w in v.getAdjacent():
+                if w.getValue().getVisited() == False:
+                    w.getValue().setVisited()
+                    Q.enqueue(w.getValue())
+                    prevVertices.put(w.getValue().getLabel(), v.getLabel())
         return prevVertices        
     
     def buildPath(self, startLabel, endLabel, prevVertices: hash.DSADoubleHashTable):
@@ -287,20 +278,15 @@ class DSAGraph():
                 shortestPath = str(prevVertex) + "->" + shortestPath
             except ValueError:
                 endBuild = True
-        if shortestPath == endLabel:
-            shortestPath = "End location not found"
-        elif shortestPath[0] != startLabel:
+        startLength = len(startLabel)
+        if shortestPath[0:startLength] != startLabel:
             shortestPath = "No path found"
 
         return shortestPath
     
     def breadthFirstSearch(self, startLabel, endLabel):
         prevVertices = self.doBFS(startLabel)
-        if prevVertices != -1:
-            shortestPath = self.buildPath(startLabel, endLabel, prevVertices)
-            print("Shortest Path between: ", startLabel, " and ", endLabel, ": ", shortestPath)
-        else:
-            shortestPath = "No path found"
+        shortestPath = self.buildPath(startLabel, endLabel, prevVertices)
         return shortestPath
             
     def dijkstraSearch(self, startLabel):
@@ -314,55 +300,45 @@ class DSAGraph():
             if vertex.getValue().getLabel() == startLabel:
                 v = vertex.getValue()
         
-        isError = False
-
-        try:
-            v.setDist(0)
-            Q.enqueue(v)
-            while not Q.isEmpty():
-                v = Q.dequeue()
-                if v.getVisited() == False:
-                    v.setVisited()
-                    for w in v.getAdjacent():
-                        newVertex = w.getValue()
-                        if newVertex.getVisited() == False:
-                            distance = float(v.getDist()) + float(self.getEdge(v.getLabel(), newVertex.getLabel()))
-                            if distance < newVertex.getDist():
-                                newVertex.setDist(distance)
-                                newVertex.setPrev(v)
-                                Q.enqueue(newVertex)
-        except UnboundLocalError: 
-            print("Starting location does not exist")
-            isError = True
-        return isError
+        v.setDist(0)
+        Q.enqueue(v)
+        while not Q.isEmpty():
+            v = Q.dequeue()
+            if v.getVisited() == False:
+                v.setVisited()
+                for w in v.getAdjacent():
+                    newVertex = w.getValue()
+                    if newVertex.getVisited() == False:
+                        distance = float(v.getDist()) + float(self.getEdge(v.getLabel(), newVertex.getLabel()))
+                        if distance < newVertex.getDist():
+                            newVertex.setDist(distance)
+                            newVertex.setPrev(v)
+                            Q.enqueue(newVertex)
+        return
     
     def doDijSearch(self, startLabel, endLabel):
-        noStart = self.dijkstraSearch(startLabel)
+        self.dijkstraSearch(startLabel)
         endVertex = self.getVertex(endLabel)
-        if noStart:
-            path = "Starting location does not exist"
-        elif endVertex == None:
-            path = "End location not found"
-        else:
-            endBuild = False
-            path = str(endVertex.getLabel())
 
-            for node in self.vertices:
-                node.getValue().clearVisited()
-            endVertex.setVisited()
-            prevVertex = endVertex.getPrev()
-            while prevVertex != None and prevVertex.getVisited() == False:
-                prevVertex.setVisited()
-                if prevVertex.getLabel() == startLabel:
-                    path = str(startLabel) + '->' + path
-                    endBuild = True
-                else:
-                    path = str(prevVertex.getLabel()) + '->' + path
-                    prevVertex = prevVertex.getPrev()
-            if not endBuild:
-                path = "No path found"
-            distance = endVertex.getDist()
-            print("Shortest Path: ", path, f" Distance: {distance: .2f}")
+        endBuild = False
+        path = str(endVertex.getLabel())
+
+        for node in self.vertices:
+            node.getValue().clearVisited()
+        endVertex.setVisited()
+        prevVertex = endVertex.getPrev()
+        while prevVertex != None and prevVertex.getVisited() == False:
+            prevVertex.setVisited()
+            if prevVertex.getLabel() == startLabel:
+                path = str(startLabel) + '->' + path
+                endBuild = True
+                distance = endVertex.getDist()
+            else:
+                path = str(prevVertex.getLabel()) + '->' + path
+                prevVertex = prevVertex.getPrev()
+        if not endBuild:
+            path = "No path found"
+            distance = 0
         return path, distance
 
     def nearestNeighbour(self):

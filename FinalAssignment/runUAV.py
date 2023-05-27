@@ -29,7 +29,11 @@ def printCommands():
     print("           cm - Close Menu")
 
 def createKey(lbl):
-    return str(ord(lbl))
+    lbl = str(lbl)
+    keyVal = 0
+    for i in range(len(lbl)):
+        keyVal = keyVal + ord(lbl[i])
+    return str(keyVal)
 
 def getRisk(temperature, humidity, windSpeed):
     if (humidity < 0):
@@ -223,7 +227,7 @@ def __main__():
 
                     toVertex = str(input("Please enter the second existing location of the connection: "))
                     while not locationGraph.hasVertex(toVertex):
-                        print("\nLocation does not exists!")
+                        print("Location does not exists!")
                         toVertex = str(input("Please enter the second existing location of the connection: "))
 
                     isFloat = False
@@ -259,8 +263,8 @@ def __main__():
 
                     toLabel = str(input("\nPlease enter the second existing location of connection: "))
                     while not locationGraph.hasVertex(toLabel):
-                        print("\nLocation does not exists!")
-                        toLabel = str(input("\nPlease enter the second existing location of connection: "))
+                        print("Location does not exists!")
+                        toLabel = str(input("Please enter the second existing location of connection: "))
 
                     locationGraph.deleteEdge(toLabel, fromLabel)
                     locationGraph.deleteEdge(fromLabel, toLabel)
@@ -272,33 +276,33 @@ def __main__():
                     if dfsOrbfs == "entire":
                         startLbl = str(input("\nPlease enter the starting location: "))
                         while not locationGraph.hasVertex(startLbl):
-                            print("\nLocation does not exists!")
-                            startLbl = str(input("\nPlease enter the starting location: "))
-                        try:
-                            entirePath = locationGraph.depthFirstSearch(startLbl)
-                            if entirePath != "Starting vertex does not exist":
-                                riskheap = getData(uavData, riskheap, entirePath)
-                            else:
-                                print(entirePath)
-                        except ValueError:
-                            print("Starting location does not exist")
+                            print("Location does not exists!")
+                            startLbl = str(input("Please enter the starting location: "))
+                        
+                        entirePath = locationGraph.depthFirstSearch(startLbl)
+                        print("Searching graph using DFS starting from: ", startLbl, " Path: ", entirePath)
+                        riskheap = getData(uavData, riskheap, entirePath)
+
                     # 2 BFS explore shortest path
                     elif dfsOrbfs == "between":
                         startLbl = str(input("\nPlease enter the starting location: "))
                         while not locationGraph.hasVertex(startLbl):
-                            print("\nLocation does not exists!")
-                            startLbl = str(input("\nPlease enter the starting location: "))
+                            print("Location does not exists!")
+                            startLbl = str(input("Please enter the starting location: "))
 
                         endLbl = str(input("\nPlease enter the end location: "))
                         while not locationGraph.hasVertex(endLbl):
-                            print("\nLocation does not exists!")
-                            endLbl = str(input("\nPlease enter the end location: "))
+                            print("Location does not exists!")
+                            endLbl = str(input("Please enter the end location: "))
 
                         shortestPath = locationGraph.breadthFirstSearch(startLbl, endLbl)
+                        print("\nShortest Unweighted Path BFS")
+                        print("Shortest Path between: ", startLbl, " and ", endLbl, ": ", shortestPath)
 
-                        print("\nDijkstra")
+                        print("\nShortest Weighted Path BFS")
                         path, distance = locationGraph.doDijSearch(startLbl, endLbl)
-                        if path != "No path found" and path != "End location not found" and path != "Starting location does not exist":
+                        print("Shortest Path: ", path, " Distance: ", distance)
+                        if path != "No path found":
                             riskheap = getData(uavData, riskheap, path)
 
                     else:
