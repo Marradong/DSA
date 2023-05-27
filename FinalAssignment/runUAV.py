@@ -3,19 +3,32 @@ import numpy as np
 import graph
 import hash
 import heap
+import uav
 
 # region Global constants
 LocFileIDX = 1
 DataFileIDX = 2
-risk_matrix = np.array([[[0, 1, 2], [1, 3, 4], [2, 4, 5]], [[1, 3, 4], [3, 6, 7], [4, 7, 8]], [[2, 4, 5], [4, 7, 8], [5, 8, 9]]])
+UavNumberIDX = 3
+risk_matrix = np.array([[[0, 1, 2], 
+                         [1, 3, 4], 
+                         [2, 4, 5]], 
+                        
+                        [[1, 3, 4], 
+                         [3, 6, 7], 
+                         [4, 7, 8]], 
+                        
+                         [[2, 4, 5], 
+                          [4, 7, 8], 
+                          [5, 8, 9]]])
 # endregion
 
 # region Function Definitions
 def usage():
-    print(" Usage: py runUAV.py x y")
+    print(" Usage: py runUAV.py x y z")
     print("        where")
     print("        x is the name of the file containing the locations")
     print("        y is the name of the file containing the UAV data")
+    print("        Z is the number of the UAVs")
 
 def printCommands():
     print("\nHere is a list of valid commands (command - description): ")
@@ -109,28 +122,45 @@ def getData(uavData, riskHeap, path):
         print(value, " risk: ", risk)
     return riskHeap
 
+def createUAVs(numUavs, locationGraph):
+    if numUavs <= 0:
+        raise ValueError()
+    
+    uavArray = np.empty(numUavs, dtype=uav.UAV)
+    for i in range(numUavs):
+        newUav = uav.UAV()
+        startLbl = str(input("\nPlease enter the UAV starting location: "))
+        while not locationGraph.hasVertex(startLbl):
+            print("Location does not exists!")
+            startLbl = str(input("Please enter the UAV starting location: "))
+        newUav.setLocation(startLbl)
+        uavArray[i] = newUav
+    return uavArray
+
 # endregion
 
 def runMenu(locationGraph, uavData, userCommand):
     ...
 
-
 # region Main Method
 
 def __main__():
-    if len(sys.argv) != 3:
+    if len(sys.argv) != 4:
         usage()
     else:
         
         lfileName = sys.argv[LocFileIDX]
         dfileName = sys.argv[DataFileIDX]
+        numUavs = sys.argv[UavNumberIDX]
         try:
+            numUavs = int(numUavs)
             # region TASK1 - Location From File
             locationGraph = loadLocations(lfileName)
             # endregion
             # region TASK4 - Data From File
             uavData = loadData(dfileName)
             # endregion
+            uavArray = createUAVs(numUavs, locationGraph)
             riskheap = heap.DSAHeap()
             # region Menu
             printCommands()
@@ -332,7 +362,9 @@ def __main__():
                     printCommands()
             # endregion
         except IOError as e:
-            print("Error loading file: ", e)
+            print("\nError loading file: ", e)
+        except ValueError as e:
+            print("\nNumber of UAVs Must be an integer above 0!\n")
         
 if __name__ == "__main__":
     __main__()
