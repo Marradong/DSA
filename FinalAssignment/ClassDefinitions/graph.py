@@ -68,10 +68,6 @@ class DSAGraphVertex():
     
     def getVisited(self):
         return self._visited
-    
-    def toString(self):
-        stringVertex = "Label: " + str(self.getLabel()) + " Value: " + str(self.getValue())
-        return stringVertex
 
 class DSAGraph():
 
@@ -195,26 +191,6 @@ class DSAGraph():
                 stringToPrint = stringToPrint + str(item.getValue().getLabel()) + " "
             print(stringToPrint)
         return
-            
-
-    def displayAsMatrix(self):
-        print("\nAdjacency Matrix: ")
-        print(" ", end="")
-        copyOfList = LL.DSADoublyLinkedList()
-        for v in self.vertices:
-            print(" ", v.getValue().getLabel(), end="")
-            copyOfList.insertLast(v.getValue())
-        print("")
-        
-        for v in self.vertices:
-            print(v.getValue().getLabel(), " ", end="")
-            for v2 in copyOfList:
-                if self.isAdjacent(v.getValue().getLabel(), v2.getValue().getLabel()):
-                    print("1  ", end="")
-                else:
-                    print("0  ", end="")
-            print("")
-        print("")
 
     
     def depthFirstSearch(self, startLabel):

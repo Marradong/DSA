@@ -46,10 +46,6 @@ class DSADoublyLinkedList:
             empty = True
         return empty
     
-    
-    def isFull(self):
-        pass
-    
 
     def insertFirst(self, newValue):
         newNode = DSADoublyListNode(newValue)
@@ -115,11 +111,21 @@ class DSADoublyLinkedList:
         
     def remove(self, value):
         curr = self._head
-        while curr and (curr.getValue().getValue() != value):
+        try:
+            currVal = curr.getValue().getValue()
+        except AttributeError:
+            print(curr.getValue())
+            currVal = None
+        while curr and (currVal != value):
             curr = curr.getNext()
+            try:
+                currVal = curr.getValue().getValue()
+                print("did nothing", currVal)
+            except AttributeError:
+                print(curr.getValue())
+                currVal = None
         
         if not curr:
-            # do nothing
             ...
         elif curr == self._head:
             self.removeFirst()
@@ -138,7 +144,7 @@ class DSADoublyLinkedList:
         if not self.isEmpty():
             print("---Head---")
             for item in self:
-                print(item)
+                print(item.getValue())
             print("---Tail---")
     
     def __iter__(self):

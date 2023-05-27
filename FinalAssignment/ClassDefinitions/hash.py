@@ -135,18 +135,6 @@ class DSADoubleHashTable():
         return self._maxStep - (index % self._maxStep)
 
 
-    def saveCSV(self):
-        try:
-            fileObj = open("hashTable.csv", "w")
-            for i in range(len(self._hashArray)):
-                if (self._hashArray[i]._value != None):
-                    fileObj.write(str(self._hashArray[i]._key) + ", " + str(self._hashArray[i]._value))
-            fileObj.close()
-        except IOError as e:
-            print("File Processing Error: " + str(e))
-        return
-
-
     def findNextPrime(self, startValue):
         if (startValue % 2 == 0):
             nextPrime = startValue + 1
