@@ -361,6 +361,29 @@ class DSAGraph():
                     prevVertex = prevVertex.getPrev()
             if not endBuild:
                 path = "No path found"
-            print("Shortest Path: ", path, f" Distance: {endVertex.getDist(): .2f}")
+            distance = endVertex.getDist()
+            print("Shortest Path: ", path, f" Distance: {distance: .2f}")
+        return path, distance
+
+    def nearestNeighbour(self):
+        unvisited = LL.DSADoublyLinkedList()
+        for node in self.vertices:
+            unvisited.insertLast(node.getValue())
+        
+        v = unvisited.peekFirst().getValue()
+        unvisited.remove(v.getValue())
+        path = str(v.getLabel())
+        while not unvisited.isEmpty():
+            closest = None
+            for u in unvisited:
+                u = u.getValue()
+                if closest == None:
+                    closest = u
+                elif float(self.getEdge(v.getLabel(), closest.getLabel())) > float(self.getEdge(v.getLabel(), u.getLabel())):
+                    closest = u
+            unvisited.remove(closest.getValue())
+            v = closest
+            path = path + "->" + str(closest.getLabel())
         return path
+
 

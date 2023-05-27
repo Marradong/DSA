@@ -95,11 +95,14 @@ def loadData(fileName):
 
 def getData(uavData, riskHeap, path):
     locations = path.split("->")
-    print("Location data")
+    print("Location : Temperature, Humidity, Wind Speed")
     for i in range(len(locations)):
-        if not riskHeap.find(locations[i]):
-            riskHeap.add(locations[i], uavData.get(str(ord(locations[i]))))
-            print(locations[i], ": ", uavData.get(str(ord(locations[i]))))
+        data = uavData.get(createKey(locations[i]))
+        splitData = data.split(",")
+        risk = getRisk(int(splitData[0]), int(splitData[1]), int(splitData[2]))
+        value = str(locations[i]) + ":" + str(splitData[0]) + "," + str(splitData[1]) + "," + str(splitData[2])
+        riskHeap.add(risk, locations[i])
+        print(value, " risk: ", risk)
     return riskHeap
 
 # endregion
@@ -138,19 +141,56 @@ def __main__():
                 # region TASK3 - insert location operation
                 elif userCommand == "il":
                     newLocLbl = str(input("\nPlease enter a label for the new location: "))
+                    while locationGraph.hasVertex(newLocLbl):
+                        print("Location already exists!")
+                        newLocLbl = str(input("Please enter a label for the new location: "))
+
                     locationGraph.addVertex(newLocLbl, newLocLbl)
 
-                    print("Please provide location data below")
-                    temperature  = str(input("\nPlease enter the temperature: "))
-                    humidity  = str(input("\nPlease enter the humidity: "))
-                    windSpeed  = str(input("\nPlease enter the wind : "))
+                    print("\nPlease provide location data below")
+                    temperature = 0.0
+                    while temperature < 25.0:
+                        try:
+                            temperature  = float(input("Please enter the temperature (must be >= 25.0): "))
+                        except ValueError:
+                            print("Please enter a floating point value!")
+                            temperature = 0.0
+
+                    humidity = -1.0
+                    while humidity < 0.0 or humidity > 100.0:
+                        try:
+                            humidity  = float(input("Please enter the humidity (0-100 inclusive): "))
+                        except ValueError:
+                            print("Please enter a floating point value!")
+                            humidity = -1.0
+
+                    windSpeed = -1.0
+                    while windSpeed < 0.0:
+                        try:
+                            windSpeed  = float(input("Please enter the wind (must be >= 0): "))
+                        except ValueError:
+                            print("Please enter a floating point value!")
+                            windSpeed = -1.0
+
                     value = str(temperature) + "," + str(humidity) + "," + str(windSpeed)
                     uavData.put(createKey(newLocLbl), value)
 
                     print("\nLocation Added!")
 
                     edgeVertex = str(input("\nPlease enter an existing location to add a connection: "))
-                    edgeLength = str(input("\nPlease enter the distance between locations: "))
+                    while not locationGraph.hasVertex(edgeVertex):
+                        print("Location does not exists!")
+                        edgeVertex = str(input("Please enter an existing location to add a connection: "))
+
+                    isFloat = False
+                    while not isFloat:
+                        try:
+                            edgeLength = float(input("\nPlease enter the distance between locations: "))
+                            isFloat = True
+                        except ValueError:
+                            print("Please enter a floating point value!")
+                            isFloat = False
+
                     locationGraph.addEdge(newLocLbl, edgeVertex, edgeLength)
 
                     print("\nConnection Added!")
@@ -158,15 +198,43 @@ def __main__():
                     addAnotherEdge = str(input("\nWould you like to add another connection? (Yes/No): "))
                     while addAnotherEdge == "Yes":
                         edgeVertex = str(input("\nPlease enter an existing location to add a connection: "))
-                        edgeLength = str(input("\nPlease enter the distance between locations: "))
+                        while not locationGraph.hasVertex(edgeVertex):
+                            print("Location does not exists!")
+                            edgeVertex = str(input("Please enter an existing location to add a connection: "))
+
+                        isFloat = False
+                        while not isFloat:
+                            try:
+                                edgeLength = float(input("\nPlease enter the distance between locations: "))
+                                isFloat = True
+                            except ValueError:
+                                print("Please enter a floating point value!")
+                                isFloat = False
+
                         locationGraph.addEdge(newLocLbl, edgeVertex, edgeLength)
                         addAnotherEdge = str(input("\nWould you like to add another connection? (Yes/No): "))
                 # endregion
                 # region TASK3 - insert connection operation
                 elif userCommand == "ic":
-                    fromVertex = str(input("\nPlease enter the first location of the connection: "))
-                    toVertex = str(input("\nPlease enter the second location of the connection: "))
-                    edgeLength = str(input("\nPlease enter the distance between locations: "))
+                    fromVertex = str(input("\nPlease enter the first existing location of the connection: "))
+                    while not locationGraph.hasVertex(fromVertex):
+                        print("Location does not exists!")
+                        fromVertex = str(input("Please enter the first existing location of the connection: "))
+
+                    toVertex = str(input("Please enter the second existing location of the connection: "))
+                    while not locationGraph.hasVertex(toVertex):
+                        print("\nLocation does not exists!")
+                        toVertex = str(input("Please enter the second existing location of the connection: "))
+
+                    isFloat = False
+                    while not isFloat:
+                        try:
+                            edgeLength = float(input("Please enter the distance between locations: "))
+                            isFloat = True
+                        except ValueError:
+                            print("Please enter a floating point value!")
+                            isFloat = False
+
                     locationGraph.addEdge(toVertex, fromVertex, edgeLength)
 
                     print("\nConnection Added!")
@@ -174,13 +242,26 @@ def __main__():
                 # region TASK3 - delete location
                 elif userCommand == "dl":
                     locationLbl = str(input("\nPlease enter a location to delete: "))
+                    while not locationGraph.hasVertex(locationLbl):
+                        print("Location does not exists!")
+                        locationLbl = str(input("Please enter a location to delete: "))
+
                     locationGraph.deleteVertex(locationLbl)
                     uavData.remove(createKey(locationLbl))
+                    print("\nLocation and Data Deleted!")
                 # endregion
                 # region TASK3 - delete connection
                 elif userCommand == "dc":
-                    fromLabel = str(input("\nPlease enter the first location of connection: "))
-                    toLabel = str(input("\nPlease enter the second location of connection: "))
+                    fromLabel = str(input("\nPlease enter the first existing location of connection: "))
+                    while not locationGraph.hasVertex(fromLabel):
+                        print("Location does not exists!")
+                        fromLabel = str(input("Please enter the first existing location of connection: "))
+
+                    toLabel = str(input("\nPlease enter the second existing location of connection: "))
+                    while not locationGraph.hasVertex(toLabel):
+                        print("\nLocation does not exists!")
+                        toLabel = str(input("\nPlease enter the second existing location of connection: "))
+
                     locationGraph.deleteEdge(toLabel, fromLabel)
                     locationGraph.deleteEdge(fromLabel, toLabel)
                 # endregion
@@ -190,6 +271,9 @@ def __main__():
                     # 2 DFS explore entire graph
                     if dfsOrbfs == "entire":
                         startLbl = str(input("\nPlease enter the starting location: "))
+                        while not locationGraph.hasVertex(startLbl):
+                            print("\nLocation does not exists!")
+                            startLbl = str(input("\nPlease enter the starting location: "))
                         try:
                             entirePath = locationGraph.depthFirstSearch(startLbl)
                             if entirePath != "Starting vertex does not exist":
@@ -201,12 +285,19 @@ def __main__():
                     # 2 BFS explore shortest path
                     elif dfsOrbfs == "between":
                         startLbl = str(input("\nPlease enter the starting location: "))
+                        while not locationGraph.hasVertex(startLbl):
+                            print("\nLocation does not exists!")
+                            startLbl = str(input("\nPlease enter the starting location: "))
+
                         endLbl = str(input("\nPlease enter the end location: "))
+                        while not locationGraph.hasVertex(endLbl):
+                            print("\nLocation does not exists!")
+                            endLbl = str(input("\nPlease enter the end location: "))
+
                         shortestPath = locationGraph.breadthFirstSearch(startLbl, endLbl)
-                        if shortestPath != "No path found" and shortestPath != "End location not found" and shortestPath != "Starting location does not exist":
-                            riskheap = getData(uavData, riskheap, shortestPath)
+
                         print("\nDijkstra")
-                        path = locationGraph.doDijSearch(startLbl, endLbl)
+                        path, distance = locationGraph.doDijSearch(startLbl, endLbl)
                         if path != "No path found" and path != "End location not found" and path != "Starting location does not exist":
                             riskheap = getData(uavData, riskheap, path)
 
@@ -215,21 +306,20 @@ def __main__():
                 # endregion
                 # region TASK6 - UAV itinerary
                 elif userCommand == "it":
-                    # Itinerary Process:
-
-                    # Assuming Risk heap is implemented correctly:
-
-                    # 1. get items from heap of highest risk level
-                    # possible way:
-                    # a. remove all items and add them to an array
-                    # b. put the items back in the heap
-
-                    # 2. get distance and path between all verticies of that risk level - fully connected graph
-                    # for i in range(len(highArr))
-
-                    # for i in 
-                    # 3. nearest neighbour to get the shortest path
-                    ...
+                    if riskheap._count == 1:
+                        ...
+                    elif riskheap._count == 0:
+                        print("\nNo locations explored! Please use the search function to add location data")
+                    else:
+                        riskGraph = graph.DSAGraph()
+                        for i in range(riskheap._count):
+                            for j in range(i, riskheap._count):
+                                fromRiskLabel = riskheap[i].getValue()
+                                toRiskLabel = riskheap[j].getValue()
+                                riskGraph.addVertex(fromRiskLabel)
+                                riskGraph.addVertex(toRiskLabel)
+                                path, distance = locationGraph.doDijSearch(fromRiskLabel, toRiskLabel)
+                                riskGraph.addEdge(fromRiskLabel, toRiskLabel, distance)
                 # endregion
                 elif userCommand == "cm":
                     print("Closing Menu")

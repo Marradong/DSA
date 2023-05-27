@@ -31,24 +31,62 @@ class DSAHeap():
         self._heap = np.empty(10000, dtype=DSAHeapEntry)
         self._count = 0
 
-    
-    def add(self, priority, value):
-        newEntry = DSAHeapEntry(priority, value)
-        self._heap[self._count] = newEntry
-        self.trickleUp(self._count)
-        self._count = self._count + 1
+
+    def updatePriority(self, priority, value):
+        for i in range(self._count):
+            if self._heap[i].getValue() == value:
+                self._heap[i].setPriority(priority)
+                self.trickleUp(i)
         return
 
+    
+    def add(self, priority, value):
+        if not self.isAdded(value):
+            newEntry = DSAHeapEntry(priority, value)
+            self._heap[self._count] = newEntry
+            self.trickleUp(self._count)
+            self._count = self._count + 1
+        return
+
+    def add(self, priority, value):
+        if self._heap[0] == None:
+            newEntry = DSAHeapEntry(priority, value)
+            self._heap[self._count] = newEntry
+            self.trickleUp(self._count)
+            self._count = self._count + 1
+        elif self._heap[0].getPriority() < priority:
+            for i in range(self._count):
+                self.remove()
+            newEntry = DSAHeapEntry(priority, value)
+            self._heap[self._count] = newEntry
+            self.trickleUp(self._count)
+            self._count = self._count + 1
+        elif self._heap[0].getPriority() == priority:
+            newEntry = DSAHeapEntry(priority, value)
+            self._heap[self._count] = newEntry
+            self.trickleUp(self._count)
+            self._count = self._count + 1
+        return
 
     def remove(self):
         root = self._heap[0]
+        rootValue = ""
         if root != None:
             self._heap[0] = self._heap[self._count - 1]
             self._heap[self._count - 1] = None
             self.trickleDown(0)
             self._count = self._count - 1
-            return root.getValue()
-        
+            rootValue = root.getValue()
+        return rootValue
+
+
+    def isAdded(self, value):
+        isAdded = False
+        for i in range(self._count):
+            if self._heap[i].getValue() == value:
+                isAdded = True
+        return isAdded
+
     
     def find(self, value):
         found = False
