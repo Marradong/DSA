@@ -1,4 +1,3 @@
-
 class UAV():
 
     def __init__(self):

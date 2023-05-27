@@ -1,6 +1,6 @@
-import linkedList as LL
-import stackQueue as sq
-import hash
+from ClassDefinitions import linkedList as LL
+from ClassDefinitions import stackQueue as sq
+from ClassDefinitions import hash
 import sys
 
 
@@ -29,6 +29,7 @@ class DSAGraphVertex():
         self._visited = False
         self._distance = sys.maxsize
         self._prev = None
+        self._nnpath = None
 
     def getDist(self):
         return self._distance
@@ -280,7 +281,7 @@ class DSAGraph():
                 endBuild = True
         startLength = len(startLabel)
         if shortestPath[0:startLength] != startLabel:
-            shortestPath = "No path found"
+            shortestPath = "No path found, UAV did not move."
 
         return shortestPath
     
@@ -337,16 +338,21 @@ class DSAGraph():
                 path = str(prevVertex.getLabel()) + '->' + path
                 prevVertex = prevVertex.getPrev()
         if not endBuild:
-            path = "No path found"
+            path = "No path found, UAV did not move."
             distance = 0
+        if startLabel == endLabel:
+            path = str(startLabel)
         return path, distance
 
-    def nearestNeighbour(self):
+    def nearestNeighbour(self, startLabel):
         unvisited = LL.DSADoublyLinkedList()
         for node in self.vertices:
             unvisited.insertLast(node.getValue())
         
-        v = unvisited.peekFirst().getValue()
+        for vertex in unvisited:
+            if vertex.getValue().getLabel() == startLabel:
+                v = vertex.getValue()
+
         unvisited.remove(v.getValue())
         path = str(v.getLabel())
         while not unvisited.isEmpty():

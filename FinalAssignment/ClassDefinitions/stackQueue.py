@@ -1,5 +1,5 @@
 import numpy as np
-import linkedList as LL
+from ClassDefinitions import linkedList as LL
 
 #classes taken from prac03
 
