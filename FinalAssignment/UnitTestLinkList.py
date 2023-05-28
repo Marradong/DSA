@@ -1,6 +1,6 @@
 from ClassDefinitions import linkedList as LL
 
-
+# taken from Prac04
 def __main__():
 
     print("\nInitialising list")
@@ -46,8 +46,7 @@ def __main__():
     print("Removing last")
     doubly.removeLast()
 
-    print("Checking if list is empty")
-    print(doubly.isEmpty())
+    print("Checking if list is empty: ", doubly.isEmpty())
 
 if __name__ == "__main__":
     __main__()

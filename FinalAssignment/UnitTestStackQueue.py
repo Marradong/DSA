@@ -28,7 +28,7 @@ def __main__():
         DSAQueue.enqueue(item)
     DSAQueue.printQueue()   
     print("Is Queue empty: ", DSAQueue.isEmpty())
-    print("Peeking first item in queue: ", DSAQueue.peek())
+    print("Peeking first item in queue: ", DSAQueue.peek().getValue())
     print("removing items from Queue")
     for i in DSAQueue:
         print("removing item: ", DSAQueue.dequeue())

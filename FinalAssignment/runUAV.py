@@ -1,7 +1,6 @@
 import sys
 import utils
 import menu
-from ClassDefinitions import graph
 from ClassDefinitions import heap
 
 # region Global constants
@@ -27,7 +26,7 @@ def __main__():
             locationGraph = utils.loadLocations(lfileName)
             # endregion
             # region TASK4 - Data From File
-            uavData = utils.loadData(dfileName)
+            uavData, locationGraph = utils.loadData(dfileName, locationGraph)
             # endregion
             uavArray = utils.createUAVs(numUavs, locationGraph)
             riskheap = heap.DSAHeap()
@@ -55,18 +54,18 @@ def __main__():
                 # endregion
                 # region TASK3 - delete connection
                 elif userCommand == "dc":
-                    locationGraph = menu.deleteConnection()
+                    locationGraph = menu.deleteConnection(locationGraph)
                 # endregion
                 # region TASK3 - search operation
                 elif userCommand == "sl":
-                    locationGraph, uavData, uavArray = menu.searchLocation(locationGraph, uavData, uavArray)
+                    locationGraph, uavData, uavArray, riskheap = menu.searchLocation(locationGraph, uavData, uavArray, riskheap)
                 # endregion
                 # region TASK6 - UAV itinerary
                 elif userCommand == "it":
                     locationGraph, uavArray, riskheap = menu.getItinerary(locationGraph, uavArray, riskheap)
                 # endregion
                 elif userCommand == "cm":
-                    print("Closing Menu")
+                    print("\nClosing Menu\n")
                 else:
                     print("Invalid command please see list below")
                     utils.printCommands()

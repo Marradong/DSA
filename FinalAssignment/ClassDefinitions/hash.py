@@ -26,8 +26,10 @@ class DSADoubleHashTable():
 
 
     def put(self, inKey, inValue):
+        didResize = False
         if self.getLoadFactor() > self._lfUpper:
             self.resize()
+            didResize = True
 
         hashIdx = self.hash(inKey)
 
@@ -41,7 +43,7 @@ class DSADoubleHashTable():
         self._hashArray[hashIdx]._state = 1
         if(inValue != None):
             self._count = self._count + 1
-        return
+        return didResize
 
 
     def get(self, inKey):
@@ -70,6 +72,7 @@ class DSADoubleHashTable():
         origIdx = hashIdx
         found = False
         giveUp = False
+        didResize = False
 
         while (not found) and (not giveUp):
             if (self._hashArray[hashIdx]._state == 0):
@@ -89,7 +92,8 @@ class DSADoubleHashTable():
             self._count = self._count - 1
             if self.getLoadFactor() < self._lfLower:
                 self.resize()
-            return
+                didResize = True
+            return didResize
     
 
     def getLoadFactor(self):

@@ -2,12 +2,12 @@ import utils
 from ClassDefinitions import graph
 
 def getItinerary(locationGraph, uavArray, riskheap):
-    if riskheap._count == 1:
+    if riskheap._count == 0:
+        print("\nNo locations explored! Please use the search function to add location data")
+    elif riskheap._count == 1:
         for i in range(len(uavArray)):
             path = str(uavArray[i].getLocation()) + "->" + str(riskheap._heap[0].getValue())
             print(f"Uav {i+1} Itinerary:", path)
-    elif riskheap._count == 0:
-        print("\nNo locations explored! Please use the search function to add location data")
     else:
         riskGraph = graph.DSAGraph()
         for i in range(riskheap._count):
@@ -32,7 +32,7 @@ def getItinerary(locationGraph, uavArray, riskheap):
                 riskGraph.deleteVertex(uavLabel)
     return locationGraph, uavArray, riskheap
 
-def searchLocation(locationGraph, uavData, uavArray):
+def searchLocation(locationGraph, uavData, uavArray, riskheap):
     dfsOrbfs = str(input("\nWould you like to search the entire map or between 2 locations? (entire/between): "))
     # 2 DFS explore entire graph
     if dfsOrbfs == "entire":
@@ -49,6 +49,12 @@ def searchLocation(locationGraph, uavData, uavArray):
         
         entirePath = locationGraph.depthFirstSearch(startLbl)
         print("Searching graph using DFS starting from: ", startLbl, " Path: ", entirePath)
+        
+
+        for item in locationGraph.vertices:
+            if not item.getValue().getVisited():
+                print("\nLocation: ", item.getValue().getLabel(), " was not visited! Please add connections to collect its data")
+
         riskheap = utils.getData(uavData, riskheap, entirePath)
 
         splitPath = entirePath.split("->")
@@ -85,7 +91,7 @@ def searchLocation(locationGraph, uavData, uavArray):
 
     else:
         print("Incorrect search method please enter either 'entire' or 'between'")
-    return locationGraph, uavData, uavArray
+    return locationGraph, uavData, uavArray, riskheap
 
 def deleteConnection(locationGraph):
     fromLabel = str(input("\nPlease enter the first existing location of connection: "))
@@ -187,25 +193,7 @@ def insertLocation(locationGraph, uavData):
 
     print("\nLocation Added!")
 
-    edgeVertex = str(input("\nPlease enter an existing location to add a connection: "))
-    while not locationGraph.hasVertex(edgeVertex):
-        print("Location does not exists!")
-        edgeVertex = str(input("Please enter an existing location to add a connection: "))
-
-    isFloat = False
-    while not isFloat:
-        try:
-            edgeLength = float(input("\nPlease enter the distance between locations: "))
-            isFloat = True
-        except ValueError:
-            print("Please enter a floating point value!")
-            isFloat = False
-
-    locationGraph.addEdge(newLocLbl, edgeVertex, edgeLength)
-
-    print("\nConnection Added!")
-
-    addAnotherEdge = str(input("\nWould you like to add another connection? (Yes/No): "))
+    addAnotherEdge = str(input("\nWould you like to add a connection? (Yes/No): "))
     while addAnotherEdge == "Yes":
         edgeVertex = str(input("\nPlease enter an existing location to add a connection: "))
         while not locationGraph.hasVertex(edgeVertex):

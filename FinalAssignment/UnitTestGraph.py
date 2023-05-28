@@ -16,17 +16,17 @@ def __main__():
 
     print("\nAdding the following edges to graph")
     print("A<->B 1.5")
-    newGraph.addEdge("A", "B", 1.5)
+    newGraph.addEdge("A", "B", 1)
     print("A<->C 2")
-    newGraph.addEdge("A", "C", 2)
+    newGraph.addEdge("A", "C", 3)
     print("A<->D 1.5")
-    newGraph.addEdge("A", "D", 1.5)
+    newGraph.addEdge("A", "D", 1)
     print("B<->C 1.5")
-    newGraph.addEdge("B", "C", 1.5)
+    newGraph.addEdge("B", "C", 1)
     print("B<->D 2")
-    newGraph.addEdge("B", "D", 2)
+    newGraph.addEdge("B", "D", 0.5)
     print("C<->D 1.5")
-    newGraph.addEdge("C", "D", 1.5)
+    newGraph.addEdge("C", "D", 1)
 
     newGraph.displayAsList()
 

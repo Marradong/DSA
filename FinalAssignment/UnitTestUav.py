@@ -1,4 +1,4 @@
-import uav
+from ClassDefinitions import uav
 
 def __main__():
     print("\ntest uav initialisation")
@@ -6,7 +6,8 @@ def __main__():
     print(newUav)
 
     print("\ntest set location")
-    location = str(input("Please enter a location for the UAV"))
+    location = str(input("Please enter a location for the UAV: "))
+    newUav.setLocation(location)
 
     print("\ntest get location")
     print("The uav location is: ", newUav.getLocation())

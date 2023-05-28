@@ -13,7 +13,7 @@ def usage():
 
 def printCommands():
     print("\nHere is a list of valid commands (command - description): ")
-    print("           ds - Display Map")
+    print("           ds - Display Area")
     print("           il - Insert Location")
     print("           ic - Insert Connection")
     print("           dl - Delete Location")
@@ -53,7 +53,6 @@ def _getRiskBasic(temperature, humidity, windSpeed):
 def loadLocations(fileName):
     with open(fileName, "r") as locationFile:
         graphDimensions = locationFile.readline().split()
-        numVerticies = int(graphDimensions[0])
         numEdges = int(graphDimensions[1])
         locationGraph = graph.DSAGraph() 
         for i in range(numEdges):
@@ -63,19 +62,21 @@ def loadLocations(fileName):
             locationGraph.addEdge(newEdge[0],newEdge[1], newEdge[2])
     return locationGraph
 
-def loadData(fileName):
+def loadData(fileName, locationGraph):
     with open(fileName, "r") as dataFile:
         uavData = hash.DSADoubleHashTable(10)
         locationData = dataFile.readline()
         while locationData:
             vertex = locationData.split()[0]
+            if not locationGraph.hasVertex(vertex):
+                locationGraph.addVertex(vertex, vertex)
             temperature = locationData.split()[1]
             humidity = locationData.split()[2]
             windSpeed = locationData.split()[3]
             value = str(temperature) + "," + str(humidity) + "," + str(windSpeed)
             uavData.put(createKey(vertex), value)
             locationData = dataFile.readline()
-    return uavData
+    return uavData, locationGraph
 
 
 def getData(uavData, riskHeap, path):
