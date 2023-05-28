@@ -3,7 +3,7 @@ from ClassDefinitions import stackQueue as sq
 from ClassDefinitions import hash
 import sys
 
-
+# adapted from prac06
 class DSAGraphEdge():
     
     def __init__(self, toVertex, fromVertex, inValue):
@@ -214,7 +214,10 @@ class DSAGraph():
                     v = w.getValue()
             v = S.pop()
         
-        previous = str(T.dequeue())
+        if T.isEmpty():
+            previous = startLabel
+        else:
+            previous = str(T.dequeue())
         path = previous
         for item in T:
             curr = str(T.dequeue())

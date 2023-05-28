@@ -2,32 +2,47 @@ import utils
 from ClassDefinitions import graph
 
 def getItinerary(locationGraph, uavArray, riskheap):
+    # case 1 - no locations have been explored
     if riskheap._count == 0:
         print("\nNo locations explored! Please use the search function to add location data")
+    # case 2 - 1 location is at risk
     elif riskheap._count == 1:
+        # iterate through the UAVs
         for i in range(len(uavArray)):
+            # path from current location to at risk location
             path = str(uavArray[i].getLocation()) + "->" + str(riskheap._heap[0].getValue())
             print(f"Uav {i+1} Itinerary:", path)
+    # case 3 - more than 1 location is at risk
     else:
         riskGraph = graph.DSAGraph()
+        # iterate through all locations in heap
         for i in range(riskheap._count):
+             # iterate through all locations in heap excluding previous locations
             for j in range(i, riskheap._count):
+                # get the location labels
                 fromRiskLabel = riskheap._heap[i].getValue()
                 toRiskLabel = riskheap._heap[j].getValue()
+                # add locations to new fully connected graph
                 riskGraph.addVertex(fromRiskLabel, fromRiskLabel)
                 riskGraph.addVertex(toRiskLabel, toRiskLabel)
+                # get distance between vertices
                 path, distance = locationGraph.doDijSearch(fromRiskLabel, toRiskLabel)
+                # add connection to new fully connected graph
                 riskGraph.addEdge(fromRiskLabel, toRiskLabel, distance)
-
+        # iterate through UAVs
         for i in range(len(uavArray)):
             uavLabel = uavArray[i].getLocation()
+            # add UAV location to fully connected graph
             riskGraph.addVertex(uavLabel, uavLabel)
             for item in riskGraph.vertices:
                 vertex = item.getValue()
+                # add connection to all vertices in graph
                 if vertex.getLabel() != uavLabel:
                     path, distance = locationGraph.doDijSearch(uavLabel, vertex.getLabel())
                     riskGraph.addEdge(uavLabel, vertex.getLabel(), distance)
+            # print UAV itinerary
             print(f"Uav {i+1} Itinerary:", riskGraph.nearestNeighbour(uavLabel))
+            # remove the UAV location if it is not high risk
             if not riskheap.isAdded(uavLabel):
                 riskGraph.deleteVertex(uavLabel)
     return locationGraph, uavArray, riskheap
@@ -36,6 +51,7 @@ def searchLocation(locationGraph, uavData, uavArray, riskheap):
     dfsOrbfs = str(input("\nWould you like to search the entire map or between 2 locations? (entire/between): "))
     # 2 DFS explore entire graph
     if dfsOrbfs == "entire":
+        # prompt user to enter valid number of UAV
         uavNumber = -1
         while uavNumber < 1 or uavNumber > len(uavArray):
             try:
@@ -46,22 +62,23 @@ def searchLocation(locationGraph, uavData, uavArray, riskheap):
                 uavNumber = -1
         uavNumber = uavNumber - 1
         startLbl = uavArray[uavNumber].getLocation()
-        
+        # get path to search entire graph
         entirePath = locationGraph.depthFirstSearch(startLbl)
         print("Searching graph using DFS starting from: ", startLbl, " Path: ", entirePath)
         
-
+        # look for unexplored nodes
         for item in locationGraph.vertices:
             if not item.getValue().getVisited():
                 print("\nLocation: ", item.getValue().getLabel(), " was not visited! Please add connections to collect its data")
-
+        # Update risk heap
         riskheap = utils.getData(uavData, riskheap, entirePath)
-
+        # Update UAV location
         splitPath = entirePath.split("->")
         uavArray[uavNumber].setLocation(splitPath[-1])
 
     # 2 BFS explore shortest path
     elif dfsOrbfs == "between":
+        # prompt user to enter valid number of UAV
         uavNumber = -1
         while uavNumber < 1 or uavNumber > len(uavArray):
             try:
@@ -125,6 +142,7 @@ def deleteLocation(locationGraph, uavData, uavArray):
             while not locationGraph.hasVertex(newLbl):
                 print("Location does not exists!")
                 newLbl = str(input(f"Please enter the UAV Number {i+1} new location: "))
+            uavArray[i].setLocation(newLbl)
 
     print("\nLocation and Data Deleted!")
     return locationGraph, uavData, uavArray

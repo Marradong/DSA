@@ -73,7 +73,7 @@ def loadData(fileName, locationGraph):
             temperature = locationData.split()[1]
             humidity = locationData.split()[2]
             windSpeed = locationData.split()[3]
-            value = str(temperature) + "," + str(humidity) + "," + str(windSpeed)
+            value = str(float(temperature)) + "," + str(float(humidity)) + "," + str(float(windSpeed))
             uavData.put(createKey(vertex), value)
             locationData = dataFile.readline()
     return uavData, locationGraph
@@ -86,7 +86,7 @@ def getData(uavData, riskHeap, path):
     for i in range(len(locations)):
         data = uavData.get(createKey(locations[i]))
         splitData = data.split(",")
-        risk = getRisk(int(splitData[0]), int(splitData[1]), int(splitData[2]))
+        risk = getRisk(float(splitData[0]), float(splitData[1]), float(splitData[2]))
         value = str(locations[i]) + ":" + str(splitData[0]) + "," + str(splitData[1]) + "," + str(splitData[2])
         riskHeap.add(risk, locations[i])
         print(value, " risk: ", risk)

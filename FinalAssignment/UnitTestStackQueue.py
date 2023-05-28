@@ -1,6 +1,7 @@
 from ClassDefinitions import stackQueue as sq
 import numpy as np
 
+# taken from prac03
 def __main__():
     A = np.arange(1, 11, 1)
     print("Initialising Stack")
