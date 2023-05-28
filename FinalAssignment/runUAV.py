@@ -1,164 +1,21 @@
 import sys
-import numpy as np
+import utils
+import menu
 from ClassDefinitions import graph
-from ClassDefinitions import hash
 from ClassDefinitions import heap
-from ClassDefinitions import uav
 
 # region Global constants
 LocFileIDX = 1
 DataFileIDX = 2
 UavNumberIDX = 3
-risk_matrix = np.array([[[0, 1, 2], 
-                         [1, 3, 4], 
-                         [2, 4, 5]], 
-                        
-                        [[1, 3, 4], 
-                         [3, 6, 7], 
-                         [4, 7, 8]], 
-                        
-                         [[2, 4, 5], 
-                          [4, 7, 8], 
-                          [5, 8, 9]]])
-# endregion
-
-# region Function Definitions
-def usage():
-    print(" Usage: py runUAV.py x y z")
-    print("        where")
-    print("        x is the name of the file containing the locations")
-    print("        y is the name of the file containing the UAV data")
-    print("        Z is the number of the UAVs")
-
-def printCommands():
-    print("\nHere is a list of valid commands (command - description): ")
-    print("           ds - Display Map")
-    print("           il - Insert Location")
-    print("           ic - Insert Connection")
-    print("           dl - Delete Location")
-    print("           dc - Delete Connection")
-    print("           sl - Search Location/s")
-    print("           it - Provide Itinerary")
-    print("           cm - Close Menu")
-
-def createKey(lbl):
-    lbl = str(lbl)
-    keyVal = 0
-    for i in range(len(lbl)):
-        keyVal = keyVal + ord(lbl[i])
-    return str(keyVal)
-
-def getRisk(temperature, humidity, windSpeed):
-    if (humidity < 0):
-        print("Incorrect Humidity! Must be 0 or above")
-    elif (windSpeed < 0):
-        print("Incorrect Wind Speed! Must be 0 or above")
-    elif temperature < 25:
-        print("Incorrect Temperature! Must be 25 or above")
-    else:
-        return _getRiskBasic(temperature, humidity, windSpeed)
-
-def _getRiskBasic(temperature, humidity, windSpeed):
-    risk = 0
-    if (temperature >= 41) or (humidity <= 30) or (windSpeed >= 56):
-        risk = 3
-    elif (33 <= temperature <= 40) or (31 <= humidity <= 50) or (41 <= windSpeed <= 55):
-        risk = 2
-    elif (25 <= temperature <= 32) or (humidity >= 51) or (windSpeed <= 40):
-        risk = 1
-    return risk
-
-def _getRiskComplex(temperature, humidity, windSpeed):
-    if(25 <= temperature <= 32):
-        tIDX = 0
-    elif(33 <= temperature <= 40):
-        tIDX = 1
-    elif(temperature >= 41):
-        tIDX = 2
-    
-    if(humidity >= 51):
-        hIDX = 0
-    elif(31 <= humidity <= 50):
-        hIDX = 1
-    elif(humidity <= 30):
-        hIDX = 2
-    
-    if(windSpeed <= 40):
-        wIDX = 0
-    elif(41 <= windSpeed <= 55):
-        wIDX = 1
-    elif(windSpeed >= 56):
-        wIDX = 2
-    
-    return risk_matrix[tIDX][hIDX][wIDX]
-
-def loadLocations(fileName):
-    with open(fileName, "r") as locationFile:
-        graphDimensions = locationFile.readline().split()
-        numVerticies = graphDimensions[0]
-        numEdges = int(graphDimensions[1])
-        locationGraph = graph.DSAGraph() 
-        for i in range(numEdges):
-            newEdge = locationFile.readline().strip("\n").split()
-            locationGraph.addVertex(newEdge[0], newEdge[0])
-            locationGraph.addVertex(newEdge[1], newEdge[1])
-            locationGraph.addEdge(newEdge[0],newEdge[1], newEdge[2])
-    return locationGraph
-
-def loadData(fileName):
-    with open(fileName, "r") as dataFile:
-        uavData = hash.DSADoubleHashTable(10)
-        locationData = dataFile.readline()
-        while locationData:
-            vertex = locationData.split()[0]
-            temperature = locationData.split()[1]
-            humidity = locationData.split()[2]
-            windSpeed = locationData.split()[3]
-            value = str(temperature) + "," + str(humidity) + "," + str(windSpeed)
-            uavData.put(createKey(vertex), value)
-            locationData = dataFile.readline()
-    return uavData
-
-
-def getData(uavData, riskHeap, path):
-    locations = path.split("->")
-    print("\nSearch results")
-    print("Location : Temperature, Humidity, Wind Speed")
-    for i in range(len(locations)):
-        data = uavData.get(createKey(locations[i]))
-        splitData = data.split(",")
-        risk = getRisk(int(splitData[0]), int(splitData[1]), int(splitData[2]))
-        value = str(locations[i]) + ":" + str(splitData[0]) + "," + str(splitData[1]) + "," + str(splitData[2])
-        riskHeap.add(risk, locations[i])
-        print(value, " risk: ", risk)
-    return riskHeap
-
-def createUAVs(numUavs, locationGraph):
-    if numUavs <= 0:
-        raise ValueError()
-    
-    uavArray = np.empty(numUavs, dtype=uav.UAV)
-    for i in range(numUavs):
-        newUav = uav.UAV()
-        startLbl = str(input(f"\nPlease enter the UAV Number {i+1} starting location: "))
-        while not locationGraph.hasVertex(startLbl):
-            print("Location does not exists!")
-            startLbl = str(input(f"Please enter the UAV Number {i+1} starting location: "))
-        newUav.setLocation(startLbl)
-        uavArray[i] = newUav
-    return uavArray
 
 # endregion
-
-def runMenu(locationGraph, uavData, uavArray, riskHeap):
-    return
-        
 
 # region Main Method
 
 def __main__():
     if len(sys.argv) != 4:
-        usage()
+        utils.usage()
     else:
         
         lfileName = sys.argv[LocFileIDX]
@@ -167,15 +24,15 @@ def __main__():
         try:
             numUavs = int(numUavs)
             # region TASK1 - Location From File
-            locationGraph = loadLocations(lfileName)
+            locationGraph = utils.loadLocations(lfileName)
             # endregion
             # region TASK4 - Data From File
-            uavData = loadData(dfileName)
+            uavData = utils.loadData(dfileName)
             # endregion
-            uavArray = createUAVs(numUavs, locationGraph)
+            uavArray = utils.createUAVs(numUavs, locationGraph)
             riskheap = heap.DSAHeap()
             # region Menu
-            printCommands()
+            utils.printCommands()
             userCommand = ""
             while (userCommand != "cm"):
                 userCommand = str(input("\nPlease enter a valid command: "))
@@ -186,222 +43,33 @@ def __main__():
                 # endregion
                 # region TASK3 - insert location operation
                 elif userCommand == "il":
-                    newLocLbl = str(input("\nPlease enter a label for the new location: "))
-                    while locationGraph.hasVertex(newLocLbl):
-                        print("Location already exists!")
-                        newLocLbl = str(input("Please enter a label for the new location: "))
-
-                    locationGraph.addVertex(newLocLbl, newLocLbl)
-
-                    print("\nPlease provide location data below")
-                    temperature = 0.0
-                    while temperature < 25.0:
-                        try:
-                            temperature  = float(input("Please enter the temperature (must be >= 25.0): "))
-                        except ValueError:
-                            print("Please enter a floating point value!")
-                            temperature = 0.0
-
-                    humidity = -1.0
-                    while humidity < 0.0 or humidity > 100.0:
-                        try:
-                            humidity  = float(input("Please enter the humidity (0-100 inclusive): "))
-                        except ValueError:
-                            print("Please enter a floating point value!")
-                            humidity = -1.0
-
-                    windSpeed = -1.0
-                    while windSpeed < 0.0:
-                        try:
-                            windSpeed  = float(input("Please enter the wind (must be >= 0): "))
-                        except ValueError:
-                            print("Please enter a floating point value!")
-                            windSpeed = -1.0
-
-                    value = str(temperature) + "," + str(humidity) + "," + str(windSpeed)
-                    uavData.put(createKey(newLocLbl), value)
-
-                    print("\nLocation Added!")
-
-                    edgeVertex = str(input("\nPlease enter an existing location to add a connection: "))
-                    while not locationGraph.hasVertex(edgeVertex):
-                        print("Location does not exists!")
-                        edgeVertex = str(input("Please enter an existing location to add a connection: "))
-
-                    isFloat = False
-                    while not isFloat:
-                        try:
-                            edgeLength = float(input("\nPlease enter the distance between locations: "))
-                            isFloat = True
-                        except ValueError:
-                            print("Please enter a floating point value!")
-                            isFloat = False
-
-                    locationGraph.addEdge(newLocLbl, edgeVertex, edgeLength)
-
-                    print("\nConnection Added!")
-
-                    addAnotherEdge = str(input("\nWould you like to add another connection? (Yes/No): "))
-                    while addAnotherEdge == "Yes":
-                        edgeVertex = str(input("\nPlease enter an existing location to add a connection: "))
-                        while not locationGraph.hasVertex(edgeVertex):
-                            print("Location does not exists!")
-                            edgeVertex = str(input("Please enter an existing location to add a connection: "))
-
-                        isFloat = False
-                        while not isFloat:
-                            try:
-                                edgeLength = float(input("\nPlease enter the distance between locations: "))
-                                isFloat = True
-                            except ValueError:
-                                print("Please enter a floating point value!")
-                                isFloat = False
-
-                        locationGraph.addEdge(newLocLbl, edgeVertex, edgeLength)
-                        addAnotherEdge = str(input("\nWould you like to add another connection? (Yes/No): "))
+                    locationGraph, uavData = menu.insertLocation(locationGraph, uavData)
                 # endregion
                 # region TASK3 - insert connection operation
                 elif userCommand == "ic":
-                    fromVertex = str(input("\nPlease enter the first existing location of the connection: "))
-                    while not locationGraph.hasVertex(fromVertex):
-                        print("Location does not exists!")
-                        fromVertex = str(input("Please enter the first existing location of the connection: "))
-
-                    toVertex = str(input("Please enter the second existing location of the connection: "))
-                    while not locationGraph.hasVertex(toVertex):
-                        print("Location does not exists!")
-                        toVertex = str(input("Please enter the second existing location of the connection: "))
-
-                    isFloat = False
-                    while not isFloat:
-                        try:
-                            edgeLength = float(input("Please enter the distance between locations: "))
-                            isFloat = True
-                        except ValueError:
-                            print("Please enter a floating point value!")
-                            isFloat = False
-
-                    locationGraph.addEdge(toVertex, fromVertex, edgeLength)
-
-                    print("\nConnection Added!")
+                    locationGraph = menu.insertConnection(locationGraph)
                 # endregion
                 # region TASK3 - delete location
                 elif userCommand == "dl":
-                    locationLbl = str(input("\nPlease enter a location to delete: "))
-                    while not locationGraph.hasVertex(locationLbl):
-                        print("Location does not exists!")
-                        locationLbl = str(input("Please enter a location to delete: "))
-
-                    locationGraph.deleteVertex(locationLbl)
-                    uavData.remove(createKey(locationLbl))
-                    print("\nLocation and Data Deleted!")
+                    locationGraph, uavData, uavArray = menu.deleteLocation(locationGraph, uavData, uavArray)
                 # endregion
                 # region TASK3 - delete connection
                 elif userCommand == "dc":
-                    fromLabel = str(input("\nPlease enter the first existing location of connection: "))
-                    while not locationGraph.hasVertex(fromLabel):
-                        print("Location does not exists!")
-                        fromLabel = str(input("Please enter the first existing location of connection: "))
-
-                    toLabel = str(input("\nPlease enter the second existing location of connection: "))
-                    while not locationGraph.hasVertex(toLabel):
-                        print("Location does not exists!")
-                        toLabel = str(input("Please enter the second existing location of connection: "))
-
-                    locationGraph.deleteEdge(toLabel, fromLabel)
-                    locationGraph.deleteEdge(fromLabel, toLabel)
+                    locationGraph = menu.deleteConnection()
                 # endregion
                 # region TASK3 - search operation
                 elif userCommand == "sl":
-                    dfsOrbfs = str(input("\nWould you like to search the entire map or between 2 locations? (entire/between): "))
-                    # 2 DFS explore entire graph
-                    if dfsOrbfs == "entire":
-                        uavNumber = -1
-                        while uavNumber < 1 or uavNumber > len(uavArray):
-                            try:
-                                print("\nValid UAV number must be between 1 and ", len(uavArray), " inclusive")
-                                uavNumber = int(input("Please enter the number of the searching UAV: "))
-                            except ValueError:
-                                print("Please enter an integer value!" )
-                                uavNumber = -1
-                        uavNumber = uavNumber - 1
-                        startLbl = uavArray[uavNumber].getLocation()
-                        
-                        entirePath = locationGraph.depthFirstSearch(startLbl)
-                        print("Searching graph using DFS starting from: ", startLbl, " Path: ", entirePath)
-                        riskheap = getData(uavData, riskheap, entirePath)
-
-                        splitPath = entirePath.split("->")
-                        uavArray[uavNumber].setLocation(splitPath[-1])
-
-                    # 2 BFS explore shortest path
-                    elif dfsOrbfs == "between":
-                        uavNumber = -1
-                        while uavNumber < 1 or uavNumber > len(uavArray):
-                            try:
-                                print("\nValid UAV number must be between 1 and ", len(uavArray), " inclusive")
-                                uavNumber = int(input("Please enter the number of the searching UAV: "))
-                            except ValueError:
-                                print("Please enter an integer value!" )
-                                uavNumber = -1
-                        uavNumber = uavNumber - 1
-                        startLbl = uavArray[uavNumber].getLocation()
-
-                        endLbl = str(input("\nPlease enter the end location: "))
-                        while not locationGraph.hasVertex(endLbl):
-                            print("Location does not exists!")
-                            endLbl = str(input("Please enter the end location: "))
-
-                        shortestPath = locationGraph.breadthFirstSearch(startLbl, endLbl)
-                        print("\nShortest Unweighted Path BFS")
-                        print("Shortest Path between: ", startLbl, " and ", endLbl, ": ", shortestPath)
-
-                        print("\nShortest Weighted Path BFS")
-                        path, distance = locationGraph.doDijSearch(startLbl, endLbl)
-                        print("Shortest Path: ", path, " Distance: ", distance)
-                        if path != "No path found, UAV did not move.":
-                            riskheap = getData(uavData, riskheap, path)
-                            uavArray[uavNumber].setLocation(endLbl)
-
-                    else:
-                        print("Incorrect search method please enter either 'entire' or 'between'")
+                    locationGraph, uavData, uavArray = menu.searchLocation(locationGraph, uavData, uavArray)
                 # endregion
                 # region TASK6 - UAV itinerary
                 elif userCommand == "it":
-                    if riskheap._count == 1:
-                        ...
-                    elif riskheap._count == 0:
-                        print("\nNo locations explored! Please use the search function to add location data")
-                    else:
-                        riskGraph = graph.DSAGraph()
-                        for i in range(riskheap._count):
-                            for j in range(i, riskheap._count):
-                                fromRiskLabel = riskheap._heap[i].getValue()
-                                toRiskLabel = riskheap._heap[j].getValue()
-                                riskGraph.addVertex(fromRiskLabel, fromRiskLabel)
-                                riskGraph.addVertex(toRiskLabel, toRiskLabel)
-                                path, distance = locationGraph.doDijSearch(fromRiskLabel, toRiskLabel)
-                                riskGraph.addEdge(fromRiskLabel, toRiskLabel, distance)
-
-                        for i in range(len(uavArray)):
-                            uavLabel = uavArray[i].getLocation()
-                            riskGraph.addVertex(uavLabel, uavLabel)
-                            for item in riskGraph.vertices:
-                                vertex = item.getValue()
-                                if vertex.getLabel() != uavLabel:
-                                    path, distance = locationGraph.doDijSearch(uavLabel, vertex.getLabel())
-                                    riskGraph.addEdge(uavLabel, vertex.getLabel(), distance)
-                            print(f"Uav {i+1} Itinerary:", riskGraph.nearestNeighbour(uavLabel))
-                            if not riskheap.isAdded(uavLabel):
-                                riskGraph.deleteVertex(uavLabel)
-
-                        
+                    locationGraph, uavArray, riskheap = menu.getItinerary(locationGraph, uavArray, riskheap)
                 # endregion
                 elif userCommand == "cm":
                     print("Closing Menu")
                 else:
                     print("Invalid command please see list below")
-                    printCommands()
+                    utils.printCommands()
             # endregion
         except IOError as e:
             print("\nError loading file: ", e)

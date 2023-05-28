@@ -35,14 +35,14 @@ class DSADoublyListNode:
 
 class DSADoublyLinkedList:
     def __init__(self):
-        self._head = None
-        self._tail = None
+        self.head = None
+        self.tail = None
         self._count = 0
 
 
     def isEmpty(self):
         empty = False
-        if (self._head == None) and (self._tail == None):
+        if (self.head == None) and (self.tail == None):
             empty = True
         return empty
     
@@ -51,66 +51,66 @@ class DSADoublyLinkedList:
         newNode = DSADoublyListNode(newValue)
         self._count = self._count + 1
         if self.isEmpty():
-            self._head = newNode
-            self._tail = newNode
+            self.head = newNode
+            self.tail = newNode
         else:
-            newNode.setNext(self._head)
-            self._head.setPrev(newNode)
-            self._head = newNode
+            newNode.setNext(self.head)
+            self.head.setPrev(newNode)
+            self.head = newNode
 
 
     def insertLast(self, newValue):
         newNode = DSADoublyListNode(newValue)
         self._count = self._count + 1
         if self.isEmpty():
-            self._head = newNode
-            self._tail = newNode
+            self.head = newNode
+            self.tail = newNode
         else:
-            self._tail.setNext(newNode)
-            newNode.setPrev(self._tail)
-            self._tail = newNode
+            self.tail.setNext(newNode)
+            newNode.setPrev(self.tail)
+            self.tail = newNode
     
     def peekFirst(self):
         if not self.isEmpty():
-            nodeValue = self._head
+            nodeValue = self.head
             return nodeValue
 
 
     def peekLast(self):
         if not self.isEmpty():
-            nodeValue = self._tail.getValue()
+            nodeValue = self.tail.getValue()
             return nodeValue
 
     
     def removeFirst(self):
         if not self.isEmpty():
             self._count = self._count - 1
-            if self._head.getNext() == None:
-                nodeValue = self._head.getValue()
-                self._head = None
-                self._tail = None
+            if self.head.getNext() == None:
+                nodeValue = self.head.getValue()
+                self.head = None
+                self.tail = None
             else:
-                nodeValue = self._head.getValue()
-                self._head = self._head.getNext()
-                self._head.setPrev(None)
+                nodeValue = self.head.getValue()
+                self.head = self.head.getNext()
+                self.head.setPrev(None)
             return nodeValue
 
 
     def removeLast(self):
         if not self.isEmpty():
             self._count = self._count - 1
-            if self._tail.getPrev() == None:
-                nodeValue = self._tail.getValue()
-                self._tail = None
-                self._head = None
+            if self.tail.getPrev() == None:
+                nodeValue = self.tail.getValue()
+                self.tail = None
+                self.head = None
             else:
-                nodeValue = self._tail.getValue()
-                self._tail = self._tail.getPrev()
-                self._tail.setNext(None)
+                nodeValue = self.tail.getValue()
+                self.tail = self.tail.getPrev()
+                self.tail.setNext(None)
             return nodeValue
         
     def remove(self, value):
-        curr = self._head
+        curr = self.head
         try:
             currVal = curr.getValue().getValue()
         except AttributeError:
@@ -120,16 +120,14 @@ class DSADoublyLinkedList:
             curr = curr.getNext()
             try:
                 currVal = curr.getValue().getValue()
-                print("did nothing", currVal)
             except AttributeError:
-                print(curr.getValue())
                 currVal = None
         
         if not curr:
             ...
-        elif curr == self._head:
+        elif curr == self.head:
             self.removeFirst()
-        elif curr == self._tail:
+        elif curr == self.tail:
             self.removeLast()
         else:
             self._count = self._count - 1
@@ -148,7 +146,7 @@ class DSADoublyLinkedList:
             print("---Tail---")
     
     def __iter__(self):
-        currentNode = self._head
+        currentNode = self.head
         while currentNode:
             yield currentNode
             currentNode = currentNode.getNext()

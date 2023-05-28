@@ -29,7 +29,6 @@ class DSAGraphVertex():
         self._visited = False
         self._distance = sys.maxsize
         self._prev = None
-        self._nnpath = None
 
     def getDist(self):
         return self._distance
@@ -214,10 +213,14 @@ class DSAGraph():
                     S.push(w.getValue())
                     v = w.getValue()
             v = S.pop()
-        path = ""
+        
+        previous = str(T.dequeue())
+        path = previous
         for item in T:
-            path = path + "->" + str(T.dequeue())
-        path = path.lstrip("->")   
+            curr = str(T.dequeue())
+            if curr != previous:
+                path = path + "->" + curr
+            previous = curr
         return path
 
 

@@ -2,7 +2,6 @@ import numpy as np
 from ClassDefinitions import uav
 from ClassDefinitions import graph
 from ClassDefinitions import hash
-from ClassDefinitions import heap
 
 
 def usage():
@@ -54,7 +53,7 @@ def _getRiskBasic(temperature, humidity, windSpeed):
 def loadLocations(fileName):
     with open(fileName, "r") as locationFile:
         graphDimensions = locationFile.readline().split()
-        numVerticies = graphDimensions[0]
+        numVerticies = int(graphDimensions[0])
         numEdges = int(graphDimensions[1])
         locationGraph = graph.DSAGraph() 
         for i in range(numEdges):
