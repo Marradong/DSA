@@ -72,8 +72,8 @@ def __main__():
             # endregion
         except IOError as e:
             print("\nError loading file: ", e)
-        # except ValueError as e:
-        #     print("\nNumber of UAVs Must be an integer above 0!\n")
+        except ValueError as e:
+            print("\nNumber of UAVs Must be an integer above 0!\n")
         
 if __name__ == "__main__":
     __main__()
